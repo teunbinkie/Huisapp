@@ -3,20 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Huisapp</title>
+<title>Huize Noord</title>
 <style>
 :root {
-  --bg: #fafafa;
-  --fg: #1a1a1a;
+  --bg: #f7fcf9;
+  --fg: #0d2318;
   --card: #ffffff;
-  --border: #e8e8e8;
-  --accent: #2563eb;
-  --accent-light: #dbeafe;
-  --success: #059669;
-  --success-light: #d1fae5;
-  --warning: #ea580c;
-  --danger: #dc2626;
-  --text-secondary: #666666;
+  --card-alt: #eef8f1;
+  --border: #d7ead9;
+  --accent: #2d6a4f;
+  --accent-light: #d8f3dc;
+  --success: #40916c;
+  --success-light: #d8f3dc;
+  --warning: #b45309;
+  --warning-light: #fef3c7;
+  --danger: #b91c1c;
+  --text-secondary: #5b7868;
 
   --boris: #ec4899;
   --hidde: #f59e0b;
@@ -26,26 +28,36 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0f0f0f;
-    --fg: #ffffff;
-    --card: #1a1a1a;
-    --border: #2a2a2a;
-    --accent: #3b82f6;
-    --accent-light: #1e3a8a;
-    --success-light: #064e3b;
-    --text-secondary: #999999;
+    --bg: #081c15;
+    --fg: #e7f7ec;
+    --card: #0f2b1f;
+    --card-alt: #123524;
+    --border: #1b4332;
+    --accent: #52b788;
+    --accent-light: #163d2b;
+    --success: #52b788;
+    --success-light: #163d2b;
+    --warning: #f2b85c;
+    --warning-light: #3a2a12;
+    --danger: #f87171;
+    --text-secondary: #8fc9a8;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0f0f0f;
-  --fg: #ffffff;
-  --card: #1a1a1a;
-  --border: #2a2a2a;
-  --accent: #3b82f6;
-  --accent-light: #1e3a8a;
-  --success-light: #064e3b;
-  --text-secondary: #999999;
+  --bg: #081c15;
+  --fg: #e7f7ec;
+  --card: #0f2b1f;
+  --card-alt: #123524;
+  --border: #1b4332;
+  --accent: #52b788;
+  --accent-light: #163d2b;
+  --success: #52b788;
+  --success-light: #163d2b;
+  --warning: #f2b85c;
+  --warning-light: #3a2a12;
+  --danger: #f87171;
+  --text-secondary: #8fc9a8;
   color-scheme: dark;
 }
 
@@ -61,19 +73,9 @@ body {
   line-height: 1.5;
 }
 
-.container { max-width: 600px; margin: 0 auto; padding-block: 24px; }
+.container { max-width: 600px; margin: 0 auto; padding-block: 24px; padding-bottom: 88px; }
 .header { margin-bottom: 20px; }
-h1 { font-size: 28px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: -0.5px; }
-.subtitle { font-size: 14px; color: var(--text-secondary); margin: 0; }
-
-.whoami-bar {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
-  font-size: 13px; color: var(--text-secondary);
-}
-.whoami-bar button {
-  padding: 4px 10px; font-size: 12px; background: var(--card); color: var(--fg);
-  border: 1px solid var(--border);
-}
+h1 { font-size: 28px; font-weight: 700; margin: 0; letter-spacing: -0.5px; color: var(--accent); }
 
 .tabs {
   display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border);
@@ -103,10 +105,10 @@ button {
   padding: 12px 18px; background: var(--accent); color: white; border: none; border-radius: 8px;
   font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; transition: background 0.2s;
 }
-button:hover { background: #1d4ed8; }
+button:hover { filter: brightness(1.1); }
 button:active { transform: scale(0.98); }
 button.ghost { background: none; color: var(--text-secondary); border: 1px solid var(--border); }
-button.ghost:hover { color: var(--fg); background: var(--card); }
+button.ghost:hover { color: var(--fg); background: var(--card); filter: none; }
 
 .list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
 .list-item {
@@ -125,8 +127,15 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 .delete-btn:hover { color: var(--danger); border-color: var(--danger); }
 .empty-state { text-align: center; color: var(--text-secondary); padding: 28px 16px; font-size: 14px; }
 
-.section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin: 24px 0 10px; }
+.section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent); margin: 24px 0 10px; }
 .section-title:first-child { margin-top: 0; }
+
+/* Avatars */
+.avatar { border-radius: 50%; object-fit: cover; background: var(--card-alt); flex-shrink: 0; display: block; border: 2px solid var(--border); }
+.avatar-sm { width: 30px; height: 30px; }
+.avatar-md { width: 56px; height: 56px; border-width: 3px; }
+.avatar-lg { width: 96px; height: 96px; border-width: 3px; }
+.avatar-xl { width: 140px; height: 140px; border-width: 4px; }
 
 /* Huistaken */
 .chores-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
@@ -140,8 +149,9 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 .chore-card.hidde { border-left-color: var(--hidde); }
 .chore-card.david { border-left-color: var(--david); }
 .chore-card.teun { border-left-color: var(--teun); }
+.chore-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .chore-room { font-size: 16px; font-weight: 600; margin: 0 0 6px; }
-.chore-person { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.chore-person { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 .chore-person.boris { color: var(--boris); }
 .chore-person.hidde { color: var(--hidde); }
 .chore-person.david { color: var(--david); }
@@ -154,26 +164,31 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 /* Anys */
 .anys-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .anys-tile {
-  background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 18px 14px;
-  text-align: center; cursor: pointer; transition: all .2s;
+  background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 16px 12px;
+  text-align: center; cursor: pointer; transition: all .2s; display: flex; flex-direction: column; align-items: center; gap: 8px;
 }
 .anys-tile:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-.anys-tile.boris { border-left: 4px solid var(--boris); }
-.anys-tile.hidde { border-left: 4px solid var(--hidde); }
-.anys-tile.david { border-left: 4px solid var(--david); }
-.anys-tile.teun { border-left: 4px solid var(--teun); }
+.anys-tile.boris { border-top: 4px solid var(--boris); }
+.anys-tile.hidde { border-top: 4px solid var(--hidde); }
+.anys-tile.david { border-top: 4px solid var(--david); }
+.anys-tile.teun { border-top: 4px solid var(--teun); }
 .anys-tile-name { font-weight: 600; font-size: 16px; }
-.anys-tile-sub { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+.anys-tile-sub { font-size: 11px; color: var(--text-secondary); }
 
 .anys-detail { display: none; }
 .anys-detail.active { display: block; }
 .anys-back { margin-bottom: 16px; }
-.anys-detail-name { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+.anys-detail-head { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.anys-detail-name { font-size: 22px; font-weight: 700; }
+.section-title.given { color: var(--accent); }
+.section-title.received { color: var(--warning); }
 .anys-row {
-  display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--card);
-  border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; margin-bottom: 8px;
+  border: 1px solid var(--border);
 }
-.anys-row-name { flex: 1; font-size: 14px; }
+.anys-row.given { background: var(--accent-light); border-color: var(--accent); }
+.anys-row.received { background: var(--warning-light); border-color: var(--warning); }
+.anys-row-name { flex: 1; font-size: 14px; font-weight: 500; }
 .anys-row-count { min-width: 24px; text-align: center; font-weight: 700; font-size: 16px; }
 .anys-row button { padding: 6px 12px; font-size: 14px; }
 .anys-row button.minus { background: none; border: 1px solid var(--border); color: var(--fg); }
@@ -183,9 +198,9 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 .huisavond-date { font-size: 14px; color: var(--accent); font-weight: 600; margin-bottom: 20px; }
 .dish-card {
   display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--card);
-  border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px;
+  border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; flex-wrap: wrap;
 }
-.dish-name { flex: 1; font-size: 14px; }
+.dish-name { flex: 1; font-size: 14px; min-width: 120px; }
 .dish-author { font-size: 11px; color: var(--text-secondary); }
 .vote-group { display: flex; align-items: center; gap: 6px; }
 .vote-group button { padding: 5px 10px; font-size: 13px; }
@@ -195,18 +210,49 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 
 .aanwezig-row {
   display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--card);
-  border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px;
+  border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; flex-wrap: wrap;
 }
-.aanwezig-name { flex: 1; font-size: 14px; font-weight: 500; }
+.aanwezig-name { font-size: 14px; font-weight: 600; }
 .aanwezig-name.boris { color: var(--boris); }
 .aanwezig-name.hidde { color: var(--hidde); }
 .aanwezig-name.david { color: var(--david); }
 .aanwezig-name.teun { color: var(--teun); }
-.aanwezig-row input[type="time"] { max-width: 120px; flex: none; padding: 8px; }
+.aanwezig-main { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 140px; }
+.toggle-group { display: flex; gap: 6px; }
+.toggle-btn { padding: 7px 10px; font-size: 15px; background: var(--card-alt); color: var(--fg); border: 1px solid var(--border); line-height: 1; }
+.toggle-btn.active.bier { background: var(--success); color: white; border-color: var(--success); }
+.toggle-btn.active.eten { background: var(--warning); color: white; border-color: var(--warning); }
+.aanwezig-row input[type="time"] { max-width: 110px; flex: none; padding: 8px; }
+
+/* Account */
+.account-me { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px 0 12px; }
+.account-me-name { font-size: 22px; font-weight: 700; }
+.kryptonite-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.kryptonite-card {
+  background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 14px;
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px;
+}
+.kryptonite-card.me { border-color: var(--accent); background: var(--accent-light); }
+.kryptonite-name { font-weight: 700; font-size: 14px; }
+.kryptonite-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
+.kryptonite-value { font-size: 13px; font-weight: 600; color: var(--danger); }
+
+/* Fridge bar */
+.fridge-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 500;
+  background: var(--card); border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  padding: 10px max(16px, env(safe-area-inset-left, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-right, 0px));
+}
+.fridge-icon { font-size: 20px; }
+.fridge-label { font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+.fridge-btn { padding: 6px 14px; font-size: 16px; }
+.fridge-btn.minus { background: none; border: 1px solid var(--border); color: var(--fg); }
+.fridge-count { min-width: 28px; text-align: center; font-weight: 700; font-size: 18px; color: var(--accent); }
 
 /* Toast + confetti + overlay */
 .toast {
-  position: fixed; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%);
+  position: fixed; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%);
   background: var(--fg); color: var(--bg); padding: 12px 20px; border-radius: 8px; font-size: 14px;
   z-index: 1000; opacity: 0; transition: opacity .3s; pointer-events: none; max-width: calc(100% - 32px); text-align: center;
 }
@@ -220,11 +266,11 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
   padding-left: max(24px, env(safe-area-inset-left, 0px));
   padding-right: max(24px, env(safe-area-inset-right, 0px));
 }
-.whoami-overlay h2 { font-size: 20px; margin: 0; text-align: center; }
+.whoami-overlay h2 { font-size: 20px; margin: 0; text-align: center; color: var(--accent); }
 .whoami-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 320px; }
 .whoami-choices button {
-  padding: 18px; font-size: 16px; font-weight: 600; border-radius: 12px; background: var(--card);
-  color: var(--fg); border: 2px solid var(--border);
+  padding: 16px 10px; font-size: 15px; font-weight: 600; border-radius: 12px; background: var(--card);
+  color: var(--fg); border: 2px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 8px;
 }
 .whoami-choices button.boris { border-color: var(--boris); }
 .whoami-choices button.hidde { border-color: var(--hidde); }
@@ -238,22 +284,16 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 <div class="whoami-overlay" id="whoamiOverlay" hidden>
   <h2>Wie ben jij?</h2>
   <div class="whoami-choices">
-    <button class="boris" data-person="Boris">Boris</button>
-    <button class="hidde" data-person="Hidde">Hidde</button>
-    <button class="david" data-person="David">David</button>
-    <button class="teun" data-person="Teun">Teun</button>
+    <button class="boris" data-person="Boris"><img class="avatar avatar-md" src="images/boris_sm.png" alt=""><span>Boris</span></button>
+    <button class="hidde" data-person="Hidde"><img class="avatar avatar-md" src="images/hidde_sm.png" alt=""><span>Hidde</span></button>
+    <button class="david" data-person="David"><img class="avatar avatar-md" src="images/david_sm.png" alt=""><span>David</span></button>
+    <button class="teun" data-person="Teun"><img class="avatar avatar-md" src="images/teun_sm.png" alt=""><span>Teun</span></button>
   </div>
 </div>
 
 <div class="container">
   <div class="header">
-    <h1>Huis</h1>
-    <p class="subtitle">Boodschappen, taken &amp; huisavond</p>
-  </div>
-
-  <div class="whoami-bar">
-    <span>Jij bent: <strong id="whoamiLabel">-</strong></span>
-    <button id="whoamiChange">wisselen</button>
+    <h1>Huize Noord</h1>
   </div>
 
   <div class="tabs">
@@ -261,6 +301,7 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
     <button class="tab" data-tab="taken">✓ Huistaken</button>
     <button class="tab" data-tab="anys">🍺 Anys</button>
     <button class="tab" data-tab="huisavond">🍽️ Huisavond</button>
+    <button class="tab" data-tab="account">👤 Account</button>
   </div>
 
   <!-- Boodschappen -->
@@ -285,10 +326,13 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
     </div>
     <div id="anysDetail" class="anys-detail">
       <button class="ghost anys-back" id="anysBackBtn">&larr; Terug</button>
-      <div class="anys-detail-name" id="anysDetailName"></div>
-      <div class="section-title">Anys die hij/zij heeft op anderen</div>
+      <div class="anys-detail-head">
+        <img class="avatar avatar-md" id="anysDetailAvatar" src="" alt="">
+        <div class="anys-detail-name" id="anysDetailName"></div>
+      </div>
+      <div class="section-title given">→ Anys die hij/zij heeft op anderen</div>
       <div id="anysGivenList"></div>
-      <div class="section-title">Anys die anderen op hem/haar hebben</div>
+      <div class="section-title received">← Anys die anderen op hem/haar hebben</div>
       <div id="anysReceivedList"></div>
     </div>
   </div>
@@ -311,9 +355,29 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
     </div>
     <div id="dishList"></div>
 
-    <div class="section-title">Aanwezig vanaf</div>
+    <div class="section-title">Aanwezig vanaf &amp; bier/eten</div>
     <div id="aanwezigList"></div>
   </div>
+
+  <!-- Account -->
+  <div id="account" class="section">
+    <div class="account-me">
+      <img class="avatar avatar-xl" id="meAvatar" src="" alt="">
+      <div class="account-me-name" id="meName">-</div>
+      <button class="ghost" id="accountWisselBtn">Wisselen</button>
+    </div>
+
+    <div class="section-title">Zwaktes</div>
+    <div class="kryptonite-grid" id="kryptoniteGrid"></div>
+  </div>
+</div>
+
+<div class="fridge-bar">
+  <span class="fridge-icon">🍺</span>
+  <span class="fridge-label">IJskast</span>
+  <button class="fridge-btn minus" id="fridgeMinus">−</button>
+  <span class="fridge-count" id="fridgeCount">-</span>
+  <button class="fridge-btn plus" id="fridgePlus">+</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -322,7 +386,7 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import {
   getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, addDoc,
-  onSnapshot, getDoc, getDocs, serverTimestamp, runTransaction, increment, deleteField
+  onSnapshot, getDoc, serverTimestamp, runTransaction, increment, deleteField
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -340,6 +404,7 @@ const db = getFirestore(app);
 const PEOPLE = ['Teun', 'Hidde', 'David', 'Boris']; // r0 index 0,1,2,3
 const ROOMS = ['Badkamer', 'Gangen', 'Keuken', 'Wc'];
 const ANCHOR = new Date(2026, 8, 7, 12, 0, 0); // maandag 7 sept 2026, 12:00 lokale tijd
+const KRYPTONITE = { Boris: 'Gluten', Hidde: "GHB'ers", David: 'Stabiele relaties', Teun: 'Hardlopen' };
 const GLUTEN_KEYWORDS = [
   'brood','pasta','bloem','koek','cracker','beschuit','pizza','bier','couscous',
   'gebak','deeg','noedel','cornflakes','muesli','soja','panko','paneermeel',
@@ -347,13 +412,12 @@ const GLUTEN_KEYWORDS = [
   'pita','beignet','croissant','baguette','stokbrood','toast','pannenkoek','bitterbal'
 ];
 
+function avatarSrc(person, size){ return `images/${person.toLowerCase()}_${size}.png`; }
 function fmtDate(d){
   const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
   return `${y}-${m}-${day}`;
 }
-function fmtDateNL(d){
-  return d.toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long' });
-}
+function fmtDateNL(d){ return d.toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long' }); }
 function weeksSinceAnchor(now){ return Math.floor((now - ANCHOR) / (7*24*60*60*1000)); }
 function getWeekMondayDate(n){ const d = new Date(ANCHOR); d.setDate(d.getDate() + n*7); return d; }
 function getRoomAssignments(n){
@@ -362,12 +426,15 @@ function getRoomAssignments(n){
   return a;
 }
 function personClass(name){ return name ? name.toLowerCase() : ''; }
-
 function containsGluten(text){
   const lower = text.toLowerCase();
   return GLUTEN_KEYWORDS.some(k => lower.includes(k));
 }
-
+function escapeHtml(text){
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
 function showToast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -375,9 +442,8 @@ function showToast(msg){
   clearTimeout(showToast._timer);
   showToast._timer = setTimeout(() => t.classList.remove('show'), 2600);
 }
-
 function burstConfetti(originEl){
-  const colors = ['#ec4899','#f59e0b','#8b5cf6','#06b6d4','#059669'];
+  const colors = ['#ec4899','#f59e0b','#8b5cf6','#06b6d4','#40916c'];
   const rect = originEl.getBoundingClientRect();
   for (let i=0;i<24;i++){
     const el = document.createElement('div');
@@ -397,21 +463,22 @@ function burstConfetti(originEl){
 /* ---------- Wie ben jij ---------- */
 let me = null;
 try { me = localStorage.getItem('huisapp_wie'); } catch {}
+function applyMeUI(){
+  document.getElementById('meAvatar').src = me ? avatarSrc(me, 'lg') : '';
+  document.getElementById('meName').textContent = me || '-';
+  renderKryptonite();
+}
 function setMe(person){
   me = person;
   try { localStorage.setItem('huisapp_wie', person); } catch {}
-  document.getElementById('whoamiLabel').textContent = person;
   document.getElementById('whoamiOverlay').hidden = true;
+  applyMeUI();
 }
-if (me) {
-  document.getElementById('whoamiLabel').textContent = me;
-} else {
-  document.getElementById('whoamiOverlay').hidden = false;
-}
+if (me) applyMeUI(); else document.getElementById('whoamiOverlay').hidden = false;
 document.querySelectorAll('.whoami-choices button').forEach(btn => {
   btn.addEventListener('click', () => setMe(btn.dataset.person));
 });
-document.getElementById('whoamiChange').addEventListener('click', () => {
+document.getElementById('accountWisselBtn').addEventListener('click', () => {
   document.getElementById('whoamiOverlay').hidden = false;
 });
 
@@ -431,7 +498,7 @@ const list = document.getElementById('list');
 const emptyState = document.getElementById('emptyState');
 const itemInput = document.getElementById('itemInput');
 
-function renderItems(snapshot){
+onSnapshot(itemsCol, snapshot => {
   const docs = [];
   snapshot.forEach(d => docs.push({ id: d.id, ...d.data() }));
   docs.sort((a,b) => (a.createdAt?.toMillis?.()||0) - (b.createdAt?.toMillis?.()||0));
@@ -454,8 +521,7 @@ function renderItems(snapshot){
     });
     list.appendChild(li);
   });
-}
-onSnapshot(itemsCol, renderItems);
+});
 
 function addItem(){
   const text = itemInput.value.trim();
@@ -466,12 +532,6 @@ function addItem(){
 }
 document.getElementById('addBtn').addEventListener('click', addItem);
 itemInput.addEventListener('keypress', e => { if (e.key === 'Enter') addItem(); });
-
-function escapeHtml(text){
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
 
 /* ---------- Huistaken ---------- */
 const choresGrid = document.getElementById('choresGrid');
@@ -491,7 +551,10 @@ ROOMS.forEach(room => {
   card.className = `chore-card ${personClass(person)}`;
   card.dataset.room = room;
   card.innerHTML = `
-    <div class="chore-person ${personClass(person)}">${person}</div>
+    <div class="chore-card-head">
+      <img class="avatar avatar-sm" src="${avatarSrc(person,'sm')}" alt="">
+      <div class="chore-person ${personClass(person)}">${person}</div>
+    </div>
     <p class="chore-room">${room}</p>
     <div class="chore-status">Nog niet gedaan</div>
     <div class="chore-deadline">Deadline: ma ${nextDeadline.toLocaleDateString('nl-NL', {day:'numeric', month:'short'})} 12:00</div>
@@ -517,7 +580,6 @@ ROOMS.forEach(room => {
   choresGrid.appendChild(card);
 });
 
-/* Penalty voor gemiste taak vorige week */
 async function applyMissedChorePenalty(){
   for (const room of ROOMS) {
     const person = prevAssignments[room];
@@ -534,7 +596,7 @@ async function applyMissedChorePenalty(){
         });
         tx.set(refDoc, { penaltyApplied: true, missed: true }, { merge: true });
       });
-    } catch (e) { /* stil negeren, probeert het bij volgend bezoek opnieuw */ }
+    } catch (e) {}
   }
 }
 applyMissedChorePenalty();
@@ -544,11 +606,11 @@ const anysGrid = document.getElementById('anysGrid');
 const anysOverview = document.getElementById('anysOverview');
 const anysDetail = document.getElementById('anysDetail');
 const anysDetailName = document.getElementById('anysDetailName');
+const anysDetailAvatar = document.getElementById('anysDetailAvatar');
 const anysGivenList = document.getElementById('anysGivenList');
 const anysReceivedList = document.getElementById('anysReceivedList');
 
-let anysCache = {}; // key `${from}_${to}` -> count
-
+let anysCache = {};
 function anysKey(from, to){ return `${from}_${to}`; }
 
 onSnapshot(collection(db, 'anys'), snap => {
@@ -574,8 +636,9 @@ function renderAnysOverview(){
     const tile = document.createElement('div');
     tile.className = `anys-tile ${personClass(person)}`;
     tile.innerHTML = `
+      <img class="avatar avatar-md" src="${avatarSrc(person,'sm')}" alt="">
       <div class="anys-tile-name">${person}</div>
-      <div class="anys-tile-sub">${given} any${given===1?'':'s'} gegeven · ${received} ontvangen</div>
+      <div class="anys-tile-sub">${given} gegeven · ${received} ontvangen</div>
     `;
     tile.addEventListener('click', () => openAnysDetail(person));
     anysGrid.appendChild(tile);
@@ -585,6 +648,7 @@ function renderAnysOverview(){
 function openAnysDetail(person){
   anysDetailName.textContent = person;
   anysDetailName.dataset.person = person;
+  anysDetailAvatar.src = avatarSrc(person, 'sm');
   anysOverview.hidden = true;
   anysDetail.classList.add('active');
   renderAnysDetail(person);
@@ -609,7 +673,7 @@ function renderAnysDetail(person){
   PEOPLE.filter(p => p !== person).forEach(other => {
     const count = anysCache[anysKey(person, other)] || 0;
     const row = document.createElement('div');
-    row.className = 'anys-row';
+    row.className = 'anys-row given';
     row.innerHTML = `
       <span class="anys-row-name">op ${other}</span>
       <button class="minus">−</button>
@@ -631,7 +695,7 @@ function renderAnysDetail(person){
   PEOPLE.filter(p => p !== person).forEach(other => {
     const count = anysCache[anysKey(other, person)] || 0;
     const row = document.createElement('div');
-    row.className = 'anys-row';
+    row.className = 'anys-row received';
     row.innerHTML = `
       <span class="anys-row-name">van ${other}</span>
       <button class="minus">−</button>
@@ -653,8 +717,8 @@ function renderAnysDetail(person){
 /* ---------- Huisavond ---------- */
 function getNextTuesday(now){
   const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const day = d.getDay(); // 0=zo,1=ma,2=di...
-  let diff = (2 - day + 7) % 7; // dagen tot dinsdag
+  const day = d.getDay();
+  let diff = (2 - day + 7) % 7;
   d.setDate(d.getDate() + diff);
   return d;
 }
@@ -665,6 +729,7 @@ document.getElementById('huisavondDate').textContent = `Aankomende dinsdag · ${
 const huisavondDocRef = doc(db, 'huisavond', huisavondKey);
 const remindersCol = collection(db, 'huisavond', huisavondKey, 'reminders');
 const dishesCol = collection(db, 'huisavond', huisavondKey, 'gerechten');
+setDoc(huisavondDocRef, {}, { merge: true });
 
 /* Reminders */
 const reminderList = document.getElementById('reminderList');
@@ -740,30 +805,92 @@ function addDish(){
 document.getElementById('dishAddBtn').addEventListener('click', addDish);
 dishInput.addEventListener('keypress', e => { if (e.key === 'Enter') addDish(); });
 
-/* Aanwezig vanaf */
+/* Aanwezig vanaf + bier/eten */
 const aanwezigList = document.getElementById('aanwezigList');
+let aanwezigCache = {};
 PEOPLE.forEach(person => {
   const row = document.createElement('div');
   row.className = 'aanwezig-row';
   row.innerHTML = `
-    <span class="aanwezig-name ${personClass(person)}">${person}</span>
+    <div class="aanwezig-main">
+      <img class="avatar avatar-sm" src="${avatarSrc(person,'sm')}" alt="">
+      <span class="aanwezig-name ${personClass(person)}">${person}</span>
+    </div>
+    <div class="toggle-group">
+      <button class="toggle-btn bier" data-person="${person}" title="Drinkt bier">🍺</button>
+      <button class="toggle-btn eten" data-person="${person}" title="Eet mee">🍽️</button>
+    </div>
     <input type="time" data-person="${person}">
   `;
   aanwezigList.appendChild(row);
 });
 onSnapshot(huisavondDocRef, snap => {
-  const aanwezig = snap.data()?.aanwezig || {};
+  aanwezigCache = snap.data()?.aanwezig || {};
   PEOPLE.forEach(person => {
-    const input = aanwezigList.querySelector(`input[data-person="${person}"]`);
-    if (document.activeElement !== input) input.value = aanwezig[person] || '';
+    const data = aanwezigCache[person] || {};
+    const timeInput = aanwezigList.querySelector(`input[type="time"][data-person="${person}"]`);
+    if (document.activeElement !== timeInput) timeInput.value = data.tijd || '';
+    const bierBtn = aanwezigList.querySelector(`.toggle-btn.bier[data-person="${person}"]`);
+    const etenBtn = aanwezigList.querySelector(`.toggle-btn.eten[data-person="${person}"]`);
+    bierBtn.classList.toggle('active', !!data.bier);
+    etenBtn.classList.toggle('active', !!data.eten);
   });
 });
 aanwezigList.querySelectorAll('input[type="time"]').forEach(input => {
   input.addEventListener('change', () => {
     const person = input.dataset.person;
-    setDoc(huisavondDocRef, { aanwezig: { [person]: input.value } }, { merge: true });
+    updateDoc(huisavondDocRef, { [`aanwezig.${person}.tijd`]: input.value });
   });
 });
+aanwezigList.querySelectorAll('.toggle-btn.bier').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const person = btn.dataset.person;
+    const current = !!aanwezigCache[person]?.bier;
+    updateDoc(huisavondDocRef, { [`aanwezig.${person}.bier`]: !current });
+  });
+});
+aanwezigList.querySelectorAll('.toggle-btn.eten').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const person = btn.dataset.person;
+    const current = !!aanwezigCache[person]?.eten;
+    updateDoc(huisavondDocRef, { [`aanwezig.${person}.eten`]: !current });
+  });
+});
+
+/* ---------- Account / Kryptonite ---------- */
+function renderKryptonite(){
+  const grid = document.getElementById('kryptoniteGrid');
+  grid.innerHTML = '';
+  PEOPLE.forEach(person => {
+    const card = document.createElement('div');
+    card.className = 'kryptonite-card' + (person === me ? ' me' : '');
+    card.innerHTML = `
+      <img class="avatar avatar-md" src="${avatarSrc(person,'sm')}" alt="">
+      <div class="kryptonite-name">${person}</div>
+      <div class="kryptonite-label">Kryptonite</div>
+      <div class="kryptonite-value">${KRYPTONITE[person]}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+renderKryptonite();
+
+/* ---------- Ijskast ---------- */
+const fridgeRef = doc(db, 'fridge', 'beer');
+const fridgeCountEl = document.getElementById('fridgeCount');
+onSnapshot(fridgeRef, snap => {
+  fridgeCountEl.textContent = snap.data()?.count ?? 0;
+});
+async function changeFridge(delta){
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(fridgeRef);
+    const current = snap.data()?.count ?? 0;
+    const next = Math.max(0, current + delta);
+    tx.set(fridgeRef, { count: next }, { merge: true });
+  });
+}
+document.getElementById('fridgePlus').addEventListener('click', () => changeFridge(1));
+document.getElementById('fridgeMinus').addEventListener('click', () => changeFridge(-1));
 </script>
 </body>
 </html>
