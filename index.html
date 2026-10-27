@@ -1,6 +1,9 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Huisapp</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-
 <style>
 :root {
   --bg: #fafafa;
@@ -10,7 +13,9 @@
   --accent: #2563eb;
   --accent-light: #dbeafe;
   --success: #059669;
+  --success-light: #d1fae5;
   --warning: #ea580c;
+  --danger: #dc2626;
   --text-secondary: #666666;
 
   --boris: #ec4899;
@@ -27,11 +32,11 @@
     --border: #2a2a2a;
     --accent: #3b82f6;
     --accent-light: #1e3a8a;
+    --success-light: #064e3b;
     --text-secondary: #999999;
     color-scheme: dark;
   }
 }
-
 :root[data-theme="dark"] {
   --bg: #0f0f0f;
   --fg: #ffffff;
@@ -39,11 +44,14 @@
   --border: #2a2a2a;
   --accent: #3b82f6;
   --accent-light: #1e3a8a;
+  --success-light: #064e3b;
   --text-secondary: #999999;
   color-scheme: dark;
 }
 
+* { box-sizing: border-box; }
 body {
+  margin: 0;
   background: var(--bg);
   color: var(--fg);
   padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -53,390 +61,709 @@ body {
   line-height: 1.5;
 }
 
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding-block: 24px;
-}
+.container { max-width: 600px; margin: 0 auto; padding-block: 24px; }
+.header { margin-bottom: 20px; }
+h1 { font-size: 28px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: -0.5px; }
+.subtitle { font-size: 14px; color: var(--text-secondary); margin: 0; }
 
-.header {
-  margin-bottom: 32px;
+.whoami-bar {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
+  font-size: 13px; color: var(--text-secondary);
 }
-
-h1 {
-  font-size: 28px;
-  font-weight: 700;
-  margin: 0 0 8px 0;
-  letter-spacing: -0.5px;
-}
-
-.subtitle {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin: 0;
+.whoami-bar button {
+  padding: 4px 10px; font-size: 12px; background: var(--card); color: var(--fg);
+  border: 1px solid var(--border);
 }
 
 .tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid var(--border);
+  display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border);
+  overflow-x: auto;
 }
-
 .tab {
-  padding: 12px 16px;
-  background: none;
-  border: none;
-  border-bottom: 3px solid transparent;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  transition: all 0.2s;
-  font-family: inherit;
+  padding: 10px 12px; background: none; border: none; border-bottom: 3px solid transparent;
+  color: var(--text-secondary); cursor: pointer; font-size: 14px; font-weight: 500;
+  transition: all 0.2s; font-family: inherit; white-space: nowrap;
 }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab:hover { color: var(--fg); }
 
-.tab.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+.section { display: none; }
+.section.active { display: block; }
+
+.input-group { display: flex; gap: 8px; margin-bottom: 16px; }
+input[type="text"], input[type="time"] {
+  flex: 1; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--card); color: var(--fg); font-size: 16px; font-family: inherit;
+  min-width: 0;
 }
-
-.tab:hover {
-  color: var(--fg);
+input[type="text"]:focus, input[type="time"]:focus {
+  outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light);
 }
-
-.section {
-  display: none;
-}
-
-.section.active {
-  display: block;
-}
-
-.input-group {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-input[type="text"] {
-  flex: 1;
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--card);
-  color: var(--fg);
-  font-size: 16px;
-  font-family: inherit;
-}
-
-input[type="text"]:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-light);
-}
-
 button {
-  padding: 12px 20px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.2s;
+  padding: 12px 18px; background: var(--accent); color: white; border: none; border-radius: 8px;
+  font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; transition: background 0.2s;
 }
+button:hover { background: #1d4ed8; }
+button:active { transform: scale(0.98); }
+button.ghost { background: none; color: var(--text-secondary); border: 1px solid var(--border); }
+button.ghost:hover { color: var(--fg); background: var(--card); }
 
-button:hover {
-  background: #1d4ed8;
-}
-
-button:active {
-  transform: scale(0.98);
-}
-
-.list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
+.list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
 .list-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  transition: all 0.2s;
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 8px;
 }
-
-.list-item.completed {
-  opacity: 0.5;
-}
-
-.list-item.completed .item-text {
-  text-decoration: line-through;
-}
-
-input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: var(--success);
-}
-
-.item-text {
-  flex: 1;
-  word-break: break-word;
-}
-
+.list-item.completed { opacity: 0.5; }
+.list-item.completed .item-text { text-decoration: line-through; }
+input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--success); flex-shrink: 0; }
+.item-text { flex: 1; word-break: break-word; }
+.gluten-icon { font-size: 15px; flex-shrink: 0; }
 .delete-btn {
-  padding: 6px 10px;
-  background: none;
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 12px;
-  font-family: inherit;
-  transition: all 0.2s;
+  padding: 6px 10px; background: none; color: var(--text-secondary); border: 1px solid var(--border);
+  border-radius: 6px; cursor: pointer; font-size: 12px; font-family: inherit;
 }
+.delete-btn:hover { color: var(--danger); border-color: var(--danger); }
+.empty-state { text-align: center; color: var(--text-secondary); padding: 28px 16px; font-size: 14px; }
 
-.delete-btn:hover {
-  color: #dc2626;
-  border-color: #dc2626;
-}
+.section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin: 24px 0 10px; }
+.section-title:first-child { margin-top: 0; }
 
-.empty-state {
-  text-align: center;
-  color: var(--text-secondary);
-  padding: 32px 20px;
-  font-size: 14px;
-}
-
-.chores-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-
-@media (min-width: 480px) {
-  .chores-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
+/* Huistaken */
+.chores-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 480px) { .chores-grid { grid-template-columns: 1fr 1fr; } }
 .chore-card {
-  background: var(--card);
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-  border-left: 4px solid var(--border);
+  background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 16px;
+  cursor: pointer; transition: all 0.2s; border-left: 4px solid var(--border); position: relative;
 }
-
-.chore-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
+.chore-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
 .chore-card.boris { border-left-color: var(--boris); }
 .chore-card.hidde { border-left-color: var(--hidde); }
 .chore-card.david { border-left-color: var(--david); }
 .chore-card.teun { border-left-color: var(--teun); }
-
-.chore-person {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-}
-
+.chore-room { font-size: 16px; font-weight: 600; margin: 0 0 6px; }
+.chore-person { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
 .chore-person.boris { color: var(--boris); }
 .chore-person.hidde { color: var(--hidde); }
 .chore-person.david { color: var(--david); }
 .chore-person.teun { color: var(--teun); }
+.chore-status { font-size: 12px; color: var(--text-secondary); }
+.chore-card.completed { background: var(--success-light); border-color: var(--success); }
+.chore-card.completed .chore-status { color: var(--success); font-weight: 600; }
+.chore-deadline { font-size: 11px; color: var(--text-secondary); margin-top: 6px; }
 
-.chore-task {
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0;
-  text-wrap: balance;
+/* Anys */
+.anys-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.anys-tile {
+  background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 18px 14px;
+  text-align: center; cursor: pointer; transition: all .2s;
 }
+.anys-tile:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.anys-tile.boris { border-left: 4px solid var(--boris); }
+.anys-tile.hidde { border-left: 4px solid var(--hidde); }
+.anys-tile.david { border-left: 4px solid var(--david); }
+.anys-tile.teun { border-left: 4px solid var(--teun); }
+.anys-tile-name { font-weight: 600; font-size: 16px; }
+.anys-tile-sub { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
 
-.chore-date {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-top: 8px;
+.anys-detail { display: none; }
+.anys-detail.active { display: block; }
+.anys-back { margin-bottom: 16px; }
+.anys-detail-name { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+.anys-row {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px;
 }
+.anys-row-name { flex: 1; font-size: 14px; }
+.anys-row-count { min-width: 24px; text-align: center; font-weight: 700; font-size: 16px; }
+.anys-row button { padding: 6px 12px; font-size: 14px; }
+.anys-row button.minus { background: none; border: 1px solid var(--border); color: var(--fg); }
+.anys-row button.trade { background: var(--warning); font-size: 12px; padding: 6px 10px; }
 
-.chore-card.completed {
-  opacity: 0.5;
+/* Huisavond */
+.huisavond-date { font-size: 14px; color: var(--accent); font-weight: 600; margin-bottom: 20px; }
+.dish-card {
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px;
 }
+.dish-name { flex: 1; font-size: 14px; }
+.dish-author { font-size: 11px; color: var(--text-secondary); }
+.vote-group { display: flex; align-items: center; gap: 6px; }
+.vote-group button { padding: 5px 10px; font-size: 13px; }
+.vote-group button.up.active { background: var(--success); }
+.vote-group button.down.active { background: var(--danger); }
+.vote-score { min-width: 20px; text-align: center; font-weight: 700; font-size: 14px; }
 
-.chore-card.completed .chore-task {
-  text-decoration: line-through;
+.aanwezig-row {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px;
 }
+.aanwezig-name { flex: 1; font-size: 14px; font-weight: 500; }
+.aanwezig-name.boris { color: var(--boris); }
+.aanwezig-name.hidde { color: var(--hidde); }
+.aanwezig-name.david { color: var(--david); }
+.aanwezig-name.teun { color: var(--teun); }
+.aanwezig-row input[type="time"] { max-width: 120px; flex: none; padding: 8px; }
+
+/* Toast + confetti + overlay */
+.toast {
+  position: fixed; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%);
+  background: var(--fg); color: var(--bg); padding: 12px 20px; border-radius: 8px; font-size: 14px;
+  z-index: 1000; opacity: 0; transition: opacity .3s; pointer-events: none; max-width: calc(100% - 32px); text-align: center;
+}
+.toast.show { opacity: 1; }
+.confetti-piece { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; z-index: 999; animation: confetti-fly .9s ease-out forwards; }
+@keyframes confetti-fly { to { transform: translate(var(--dx), var(--dy)) rotate(720deg); opacity: 0; } }
+
+.whoami-overlay {
+  position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 20px; padding: 24px;
+  padding-left: max(24px, env(safe-area-inset-left, 0px));
+  padding-right: max(24px, env(safe-area-inset-right, 0px));
+}
+.whoami-overlay h2 { font-size: 20px; margin: 0; text-align: center; }
+.whoami-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 320px; }
+.whoami-choices button {
+  padding: 18px; font-size: 16px; font-weight: 600; border-radius: 12px; background: var(--card);
+  color: var(--fg); border: 2px solid var(--border);
+}
+.whoami-choices button.boris { border-color: var(--boris); }
+.whoami-choices button.hidde { border-color: var(--hidde); }
+.whoami-choices button.david { border-color: var(--david); }
+.whoami-choices button.teun { border-color: var(--teun); }
+[hidden] { display: none !important; }
 </style>
+</head>
+<body>
+
+<div class="whoami-overlay" id="whoamiOverlay" hidden>
+  <h2>Wie ben jij?</h2>
+  <div class="whoami-choices">
+    <button class="boris" data-person="Boris">Boris</button>
+    <button class="hidde" data-person="Hidde">Hidde</button>
+    <button class="david" data-person="David">David</button>
+    <button class="teun" data-person="Teun">Teun</button>
+  </div>
+</div>
 
 <div class="container">
   <div class="header">
     <h1>Huis</h1>
-    <p class="subtitle">Boodschappen &amp; taken samen</p>
+    <p class="subtitle">Boodschappen, taken &amp; huisavond</p>
+  </div>
+
+  <div class="whoami-bar">
+    <span>Jij bent: <strong id="whoamiLabel">-</strong></span>
+    <button id="whoamiChange">wisselen</button>
   </div>
 
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('boodschappen')">🛒 Boodschappen</button>
-    <button class="tab" onclick="switchTab('taken')">✓ Huistaken</button>
+    <button class="tab active" data-tab="boodschappen">🛒 Boodschappen</button>
+    <button class="tab" data-tab="taken">✓ Huistaken</button>
+    <button class="tab" data-tab="anys">🍺 Anys</button>
+    <button class="tab" data-tab="huisavond">🍽️ Huisavond</button>
   </div>
 
+  <!-- Boodschappen -->
   <div id="boodschappen" class="section active">
     <div class="input-group">
-      <input
-        type="text"
-        id="itemInput"
-        placeholder="Voeg item toe..."
-        autocomplete="off"
-      >
+      <input type="text" id="itemInput" placeholder="Voeg item toe..." autocomplete="off">
       <button id="addBtn">Toevoegen</button>
     </div>
-
     <ul class="list" id="list"></ul>
-    <div class="empty-state" id="emptyState">Je lijst is leeg. Voeg een item toe!</div>
+    <div class="empty-state" id="emptyState" hidden>Je lijst is leeg. Voeg een item toe!</div>
   </div>
 
+  <!-- Huistaken -->
   <div id="taken" class="section">
     <div class="chores-grid" id="choresGrid"></div>
   </div>
+
+  <!-- Anys -->
+  <div id="anys" class="section">
+    <div id="anysOverview">
+      <div class="anys-grid" id="anysGrid"></div>
+    </div>
+    <div id="anysDetail" class="anys-detail">
+      <button class="ghost anys-back" id="anysBackBtn">&larr; Terug</button>
+      <div class="anys-detail-name" id="anysDetailName"></div>
+      <div class="section-title">Anys die hij/zij heeft op anderen</div>
+      <div id="anysGivenList"></div>
+      <div class="section-title">Anys die anderen op hem/haar hebben</div>
+      <div id="anysReceivedList"></div>
+    </div>
+  </div>
+
+  <!-- Huisavond -->
+  <div id="huisavond" class="section">
+    <div class="huisavond-date" id="huisavondDate"></div>
+
+    <div class="section-title">Reminders</div>
+    <div class="input-group">
+      <input type="text" id="reminderInput" placeholder="Iets om niet te vergeten..." autocomplete="off">
+      <button id="reminderAddBtn">Toevoegen</button>
+    </div>
+    <ul class="list" id="reminderList"></ul>
+
+    <div class="section-title">Gerechten voorstellen</div>
+    <div class="input-group">
+      <input type="text" id="dishInput" placeholder="Stel een gerecht voor..." autocomplete="off">
+      <button id="dishAddBtn">Toevoegen</button>
+    </div>
+    <div id="dishList"></div>
+
+    <div class="section-title">Aanwezig vanaf</div>
+    <div id="aanwezigList"></div>
+  </div>
 </div>
 
-<script>
-function switchTab(tab) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(tab).classList.add('active');
-  event.target.classList.add('active');
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import {
+  getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, addDoc,
+  onSnapshot, getDoc, getDocs, serverTimestamp, runTransaction, increment, deleteField
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCJpt1JzGYpLZsSx3dJI06TgzS5gqGPs0g",
+  authDomain: "huisapp-35cac.firebaseapp.com",
+  projectId: "huisapp-35cac",
+  storageBucket: "huisapp-35cac.firebasestorage.app",
+  messagingSenderId: "1049309450276",
+  appId: "1:1049309450276:web:0b24031f240590e47708b1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const PEOPLE = ['Teun', 'Hidde', 'David', 'Boris']; // r0 index 0,1,2,3
+const ROOMS = ['Badkamer', 'Gangen', 'Keuken', 'Wc'];
+const ANCHOR = new Date(2026, 8, 7, 12, 0, 0); // maandag 7 sept 2026, 12:00 lokale tijd
+const GLUTEN_KEYWORDS = [
+  'brood','pasta','bloem','koek','cracker','beschuit','pizza','bier','couscous',
+  'gebak','deeg','noedel','cornflakes','muesli','soja','panko','paneermeel',
+  'tarwe','gerst','rogge','spelt','seitan','lasagne','wrap','tortilla','naan',
+  'pita','beignet','croissant','baguette','stokbrood','toast','pannenkoek','bitterbal'
+];
+
+function fmtDate(d){
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function fmtDateNL(d){
+  return d.toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long' });
+}
+function weeksSinceAnchor(now){ return Math.floor((now - ANCHOR) / (7*24*60*60*1000)); }
+function getWeekMondayDate(n){ const d = new Date(ANCHOR); d.setDate(d.getDate() + n*7); return d; }
+function getRoomAssignments(n){
+  const a = {};
+  ROOMS.forEach((room, r) => { const idx = ((r - n) % 4 + 4) % 4; a[room] = PEOPLE[idx]; });
+  return a;
+}
+function personClass(name){ return name ? name.toLowerCase() : ''; }
+
+function containsGluten(text){
+  const lower = text.toLowerCase();
+  return GLUTEN_KEYWORDS.some(k => lower.includes(k));
 }
 
-const itemInput = document.getElementById('itemInput');
-const addBtn = document.getElementById('addBtn');
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+function burstConfetti(originEl){
+  const colors = ['#ec4899','#f59e0b','#8b5cf6','#06b6d4','#059669'];
+  const rect = originEl.getBoundingClientRect();
+  for (let i=0;i<24;i++){
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = (rect.left + rect.width/2) + 'px';
+    el.style.top = (rect.top + rect.height/2) + 'px';
+    el.style.background = colors[i % colors.length];
+    const angle = Math.random()*Math.PI*2;
+    const dist = 60 + Math.random()*80;
+    el.style.setProperty('--dx', (Math.cos(angle)*dist) + 'px');
+    el.style.setProperty('--dy', (Math.sin(angle)*dist - 40) + 'px');
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 900);
+  }
+}
+
+/* ---------- Wie ben jij ---------- */
+let me = null;
+try { me = localStorage.getItem('huisapp_wie'); } catch {}
+function setMe(person){
+  me = person;
+  try { localStorage.setItem('huisapp_wie', person); } catch {}
+  document.getElementById('whoamiLabel').textContent = person;
+  document.getElementById('whoamiOverlay').hidden = true;
+}
+if (me) {
+  document.getElementById('whoamiLabel').textContent = me;
+} else {
+  document.getElementById('whoamiOverlay').hidden = false;
+}
+document.querySelectorAll('.whoami-choices button').forEach(btn => {
+  btn.addEventListener('click', () => setMe(btn.dataset.person));
+});
+document.getElementById('whoamiChange').addEventListener('click', () => {
+  document.getElementById('whoamiOverlay').hidden = false;
+});
+
+/* ---------- Tabs ---------- */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(tab.dataset.tab).classList.add('active');
+    tab.classList.add('active');
+  });
+});
+
+/* ---------- Boodschappen ---------- */
+const itemsCol = collection(db, 'boodschappen');
 const list = document.getElementById('list');
 const emptyState = document.getElementById('emptyState');
+const itemInput = document.getElementById('itemInput');
 
-function loadItems() {
-  try {
-    const saved = localStorage.getItem('boodschappenlijst');
-    return saved ? JSON.parse(saved) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveItems(items) {
-  try {
-    localStorage.setItem('boodschappenlijst', JSON.stringify(items));
-  } catch {}
-}
-
-function render() {
-  const items = loadItems();
+function renderItems(snapshot){
+  const docs = [];
+  snapshot.forEach(d => docs.push({ id: d.id, ...d.data() }));
+  docs.sort((a,b) => (a.createdAt?.toMillis?.()||0) - (b.createdAt?.toMillis?.()||0));
   list.innerHTML = '';
-
-  if (items.length === 0) {
-    emptyState.style.display = 'block';
-    return;
-  }
-
-  emptyState.style.display = 'none';
-
-  items.forEach((item, index) => {
+  emptyState.hidden = docs.length > 0;
+  docs.forEach(item => {
     const li = document.createElement('li');
     li.className = 'list-item' + (item.completed ? ' completed' : '');
-
     li.innerHTML = `
-      <input
-        type="checkbox"
-        ${item.completed ? 'checked' : ''}
-        onchange="toggleItem(${index})"
-      >
+      <input type="checkbox" ${item.completed ? 'checked' : ''}>
       <span class="item-text">${escapeHtml(item.text)}</span>
-      <button class="delete-btn" onclick="deleteItem(${index})">Verwijderen</button>
+      ${item.gluten ? '<span class="gluten-icon" title="Bevat (waarschijnlijk) gluten">🌾</span>' : ''}
+      <button class="delete-btn">Verwijderen</button>
     `;
-
+    li.querySelector('input[type="checkbox"]').addEventListener('change', (e) => {
+      updateDoc(doc(db, 'boodschappen', item.id), { completed: e.target.checked });
+    });
+    li.querySelector('.delete-btn').addEventListener('click', () => {
+      deleteDoc(doc(db, 'boodschappen', item.id));
+    });
     list.appendChild(li);
   });
 }
+onSnapshot(itemsCol, renderItems);
 
-function addItem() {
+function addItem(){
   const text = itemInput.value.trim();
   if (!text) return;
-
-  const items = loadItems();
-  items.push({ text, completed: false });
-  saveItems(items);
-
+  addDoc(itemsCol, { text, completed: false, gluten: containsGluten(text), createdAt: serverTimestamp() });
   itemInput.value = '';
   itemInput.focus();
-  render();
 }
+document.getElementById('addBtn').addEventListener('click', addItem);
+itemInput.addEventListener('keypress', e => { if (e.key === 'Enter') addItem(); });
 
-function toggleItem(index) {
-  const items = loadItems();
-  items[index].completed = !items[index].completed;
-  saveItems(items);
-  render();
-}
-
-function deleteItem(index) {
-  const items = loadItems();
-  items.splice(index, 1);
-  saveItems(items);
-  render();
-}
-
-function escapeHtml(text) {
+function escapeHtml(text){
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
 }
 
-addBtn.addEventListener('click', addItem);
-itemInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') addItem();
+/* ---------- Huistaken ---------- */
+const choresGrid = document.getElementById('choresGrid');
+const nowForChores = new Date();
+const currentN = weeksSinceAnchor(nowForChores);
+const currentAssignments = getRoomAssignments(currentN);
+const currentWeekKey = fmtDate(getWeekMondayDate(currentN));
+const prevAssignments = getRoomAssignments(currentN - 1);
+const prevWeekKey = fmtDate(getWeekMondayDate(currentN - 1));
+const nextDeadline = getWeekMondayDate(currentN + 1);
+
+function choreDocId(room, weekKey){ return `${room}_${weekKey}`; }
+
+ROOMS.forEach(room => {
+  const person = currentAssignments[room];
+  const card = document.createElement('div');
+  card.className = `chore-card ${personClass(person)}`;
+  card.dataset.room = room;
+  card.innerHTML = `
+    <div class="chore-person ${personClass(person)}">${person}</div>
+    <p class="chore-room">${room}</p>
+    <div class="chore-status">Nog niet gedaan</div>
+    <div class="chore-deadline">Deadline: ma ${nextDeadline.toLocaleDateString('nl-NL', {day:'numeric', month:'short'})} 12:00</div>
+  `;
+  const statusEl = card.querySelector('.chore-status');
+  const docRef = doc(db, 'chores', choreDocId(room, currentWeekKey));
+  onSnapshot(docRef, snap => {
+    const data = snap.data();
+    const completed = !!data?.completed;
+    card.classList.toggle('completed', completed);
+    statusEl.textContent = completed ? `Gedaan door ${data.completedBy || person} ✓` : 'Nog niet gedaan';
+  });
+  card.addEventListener('click', async () => {
+    const snap = await getDoc(docRef);
+    const completed = !!snap.data()?.completed;
+    if (!completed) {
+      await setDoc(docRef, { completed: true, completedBy: me || person, completedAt: serverTimestamp() }, { merge: true });
+      burstConfetti(card);
+    } else {
+      await setDoc(docRef, { completed: false }, { merge: true });
+    }
+  });
+  choresGrid.appendChild(card);
 });
 
-const chores = [
-  { person: 'Boris', task: 'Keuken', class: 'boris' },
-  { person: 'Hidde', task: 'Badkamer', class: 'hidde' },
-  { person: 'David', task: 'WC', class: 'david' },
-  { person: 'Teun', task: 'Gang', class: 'teun' }
-];
+/* Penalty voor gemiste taak vorige week */
+async function applyMissedChorePenalty(){
+  for (const room of ROOMS) {
+    const person = prevAssignments[room];
+    const refDoc = doc(db, 'chores', choreDocId(room, prevWeekKey));
+    try {
+      await runTransaction(db, async (tx) => {
+        const snap = await tx.get(refDoc);
+        const data = snap.data();
+        if (data?.penaltyApplied) return;
+        if (data?.completed) { tx.set(refDoc, { penaltyApplied: true }, { merge: true }); return; }
+        PEOPLE.filter(p => p !== person).forEach(other => {
+          const anyRef = doc(db, 'anys', `${other}_${person}`);
+          tx.set(anyRef, { count: increment(1) }, { merge: true });
+        });
+        tx.set(refDoc, { penaltyApplied: true, missed: true }, { merge: true });
+      });
+    } catch (e) { /* stil negeren, probeert het bij volgend bezoek opnieuw */ }
+  }
+}
+applyMissedChorePenalty();
 
-function renderChores() {
-  const grid = document.getElementById('choresGrid');
-  grid.innerHTML = chores.map((chore, i) => `
-    <div class="chore-card ${chore.class}" onclick="toggleChore(${i})">
-      <div class="chore-person ${chore.class}">${chore.person}</div>
-      <p class="chore-task">${chore.task}</p>
-      <div class="chore-date">Deze week</div>
-    </div>
-  `).join('');
+/* ---------- Anys ---------- */
+const anysGrid = document.getElementById('anysGrid');
+const anysOverview = document.getElementById('anysOverview');
+const anysDetail = document.getElementById('anysDetail');
+const anysDetailName = document.getElementById('anysDetailName');
+const anysGivenList = document.getElementById('anysGivenList');
+const anysReceivedList = document.getElementById('anysReceivedList');
+
+let anysCache = {}; // key `${from}_${to}` -> count
+
+function anysKey(from, to){ return `${from}_${to}`; }
+
+onSnapshot(collection(db, 'anys'), snap => {
+  anysCache = {};
+  snap.forEach(d => { anysCache[d.id] = d.data().count || 0; });
+  renderAnysOverview();
+  if (anysDetail.classList.contains('active')) renderAnysDetail(anysDetailName.dataset.person);
+});
+
+function totalFor(person){
+  let given = 0, received = 0;
+  PEOPLE.filter(p => p !== person).forEach(other => {
+    given += anysCache[anysKey(person, other)] || 0;
+    received += anysCache[anysKey(other, person)] || 0;
+  });
+  return { given, received };
 }
 
-function toggleChore(index) {
-  const cards = document.querySelectorAll('.chore-card');
-  cards[index].classList.toggle('completed');
+function renderAnysOverview(){
+  anysGrid.innerHTML = '';
+  PEOPLE.forEach(person => {
+    const { given, received } = totalFor(person);
+    const tile = document.createElement('div');
+    tile.className = `anys-tile ${personClass(person)}`;
+    tile.innerHTML = `
+      <div class="anys-tile-name">${person}</div>
+      <div class="anys-tile-sub">${given} any${given===1?'':'s'} gegeven · ${received} ontvangen</div>
+    `;
+    tile.addEventListener('click', () => openAnysDetail(person));
+    anysGrid.appendChild(tile);
+  });
 }
 
-render();
-renderChores();
+function openAnysDetail(person){
+  anysDetailName.textContent = person;
+  anysDetailName.dataset.person = person;
+  anysOverview.hidden = true;
+  anysDetail.classList.add('active');
+  renderAnysDetail(person);
+}
+document.getElementById('anysBackBtn').addEventListener('click', () => {
+  anysOverview.hidden = false;
+  anysDetail.classList.remove('active');
+});
+
+async function changeAny(from, to, delta){
+  const ref = doc(db, 'anys', anysKey(from, to));
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(ref);
+    const current = snap.data()?.count || 0;
+    const next = Math.max(0, current + delta);
+    tx.set(ref, { count: next }, { merge: true });
+  });
+}
+
+function renderAnysDetail(person){
+  anysGivenList.innerHTML = '';
+  PEOPLE.filter(p => p !== person).forEach(other => {
+    const count = anysCache[anysKey(person, other)] || 0;
+    const row = document.createElement('div');
+    row.className = 'anys-row';
+    row.innerHTML = `
+      <span class="anys-row-name">op ${other}</span>
+      <button class="minus">−</button>
+      <span class="anys-row-count">${count}</span>
+      <button class="plus">+</button>
+      ${count > 0 ? '<button class="trade">Inwisselen 🍺</button>' : ''}
+    `;
+    row.querySelector('.minus').addEventListener('click', () => changeAny(person, other, -1));
+    row.querySelector('.plus').addEventListener('click', () => changeAny(person, other, 1));
+    const tradeBtn = row.querySelector('.trade');
+    if (tradeBtn) tradeBtn.addEventListener('click', async () => {
+      await changeAny(person, other, -1);
+      showToast(`🍺 ${other} moet een biertje drinken!`);
+    });
+    anysGivenList.appendChild(row);
+  });
+
+  anysReceivedList.innerHTML = '';
+  PEOPLE.filter(p => p !== person).forEach(other => {
+    const count = anysCache[anysKey(other, person)] || 0;
+    const row = document.createElement('div');
+    row.className = 'anys-row';
+    row.innerHTML = `
+      <span class="anys-row-name">van ${other}</span>
+      <button class="minus">−</button>
+      <span class="anys-row-count">${count}</span>
+      <button class="plus">+</button>
+      ${count > 0 ? '<button class="trade">Inwisselen 🍺</button>' : ''}
+    `;
+    row.querySelector('.minus').addEventListener('click', () => changeAny(other, person, -1));
+    row.querySelector('.plus').addEventListener('click', () => changeAny(other, person, 1));
+    const tradeBtn = row.querySelector('.trade');
+    if (tradeBtn) tradeBtn.addEventListener('click', async () => {
+      await changeAny(other, person, -1);
+      showToast(`🍺 ${person} moet een biertje drinken!`);
+    });
+    anysReceivedList.appendChild(row);
+  });
+}
+
+/* ---------- Huisavond ---------- */
+function getNextTuesday(now){
+  const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const day = d.getDay(); // 0=zo,1=ma,2=di...
+  let diff = (2 - day + 7) % 7; // dagen tot dinsdag
+  d.setDate(d.getDate() + diff);
+  return d;
+}
+const huisavondDate = getNextTuesday(new Date());
+const huisavondKey = fmtDate(huisavondDate);
+document.getElementById('huisavondDate').textContent = `Aankomende dinsdag · ${fmtDateNL(huisavondDate)}`;
+
+const huisavondDocRef = doc(db, 'huisavond', huisavondKey);
+const remindersCol = collection(db, 'huisavond', huisavondKey, 'reminders');
+const dishesCol = collection(db, 'huisavond', huisavondKey, 'gerechten');
+
+/* Reminders */
+const reminderList = document.getElementById('reminderList');
+const reminderInput = document.getElementById('reminderInput');
+onSnapshot(remindersCol, snap => {
+  const docs = [];
+  snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
+  docs.sort((a,b) => (a.createdAt?.toMillis?.()||0) - (b.createdAt?.toMillis?.()||0));
+  reminderList.innerHTML = '';
+  docs.forEach(r => {
+    const li = document.createElement('li');
+    li.className = 'list-item';
+    li.innerHTML = `<span class="item-text">${escapeHtml(r.text)}${r.author ? ` <span class="dish-author">— ${escapeHtml(r.author)}</span>` : ''}</span><button class="delete-btn">Verwijderen</button>`;
+    li.querySelector('.delete-btn').addEventListener('click', () => deleteDoc(doc(db, 'huisavond', huisavondKey, 'reminders', r.id)));
+    reminderList.appendChild(li);
+  });
+});
+function addReminder(){
+  const text = reminderInput.value.trim();
+  if (!text) return;
+  addDoc(remindersCol, { text, author: me || null, createdAt: serverTimestamp() });
+  reminderInput.value = '';
+}
+document.getElementById('reminderAddBtn').addEventListener('click', addReminder);
+reminderInput.addEventListener('keypress', e => { if (e.key === 'Enter') addReminder(); });
+
+/* Gerechten */
+const dishList = document.getElementById('dishList');
+const dishInput = document.getElementById('dishInput');
+onSnapshot(dishesCol, snap => {
+  const docs = [];
+  snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
+  docs.sort((a,b) => (a.createdAt?.toMillis?.()||0) - (b.createdAt?.toMillis?.()||0));
+  dishList.innerHTML = '';
+  if (docs.length === 0) {
+    dishList.innerHTML = '<div class="empty-state">Nog geen gerechten voorgesteld.</div>';
+    return;
+  }
+  docs.forEach(dish => {
+    const votes = dish.votes || {};
+    const score = Object.values(votes).reduce((a,b) => a+b, 0);
+    const myVote = me ? votes[me] : undefined;
+    const card = document.createElement('div');
+    card.className = 'dish-card';
+    card.innerHTML = `
+      <span class="dish-name">${escapeHtml(dish.text)}${dish.author ? ` <span class="dish-author">— ${escapeHtml(dish.author)}</span>` : ''}</span>
+      <div class="vote-group">
+        <button class="down ${myVote === -1 ? 'active' : ''}">−</button>
+        <span class="vote-score">${score}</span>
+        <button class="up ${myVote === 1 ? 'active' : ''}">+</button>
+      </div>
+      <button class="delete-btn">x</button>
+    `;
+    const dishRef = doc(db, 'huisavond', huisavondKey, 'gerechten', dish.id);
+    card.querySelector('.up').addEventListener('click', () => {
+      if (!me) { showToast('Kies eerst wie je bent'); return; }
+      updateDoc(dishRef, { [`votes.${me}`]: myVote === 1 ? deleteField() : 1 });
+    });
+    card.querySelector('.down').addEventListener('click', () => {
+      if (!me) { showToast('Kies eerst wie je bent'); return; }
+      updateDoc(dishRef, { [`votes.${me}`]: myVote === -1 ? deleteField() : -1 });
+    });
+    card.querySelector('.delete-btn').addEventListener('click', () => deleteDoc(dishRef));
+    dishList.appendChild(card);
+  });
+});
+function addDish(){
+  const text = dishInput.value.trim();
+  if (!text) return;
+  addDoc(dishesCol, { text, author: me || null, votes: {}, createdAt: serverTimestamp() });
+  dishInput.value = '';
+}
+document.getElementById('dishAddBtn').addEventListener('click', addDish);
+dishInput.addEventListener('keypress', e => { if (e.key === 'Enter') addDish(); });
+
+/* Aanwezig vanaf */
+const aanwezigList = document.getElementById('aanwezigList');
+PEOPLE.forEach(person => {
+  const row = document.createElement('div');
+  row.className = 'aanwezig-row';
+  row.innerHTML = `
+    <span class="aanwezig-name ${personClass(person)}">${person}</span>
+    <input type="time" data-person="${person}">
+  `;
+  aanwezigList.appendChild(row);
+});
+onSnapshot(huisavondDocRef, snap => {
+  const aanwezig = snap.data()?.aanwezig || {};
+  PEOPLE.forEach(person => {
+    const input = aanwezigList.querySelector(`input[data-person="${person}"]`);
+    if (document.activeElement !== input) input.value = aanwezig[person] || '';
+  });
+});
+aanwezigList.querySelectorAll('input[type="time"]').forEach(input => {
+  input.addEventListener('change', () => {
+    const person = input.dataset.person;
+    setDoc(huisavondDocRef, { aanwezig: { [person]: input.value } }, { merge: true });
+  });
+});
 </script>
+</body>
+</html>
