@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Huize Noord</title>
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Huize Noord">
 <style>
 :root {
   --bg: #f7fcf9;
@@ -28,36 +32,36 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #081c15;
+    --bg: #050b08;
     --fg: #e7f7ec;
-    --card: #0f2b1f;
-    --card-alt: #123524;
-    --border: #1b4332;
+    --card: #0c1813;
+    --card-alt: #10211a;
+    --border: #1b2e25;
     --accent: #52b788;
-    --accent-light: #163d2b;
+    --accent-light: #122a1d;
     --success: #52b788;
-    --success-light: #163d2b;
+    --success-light: #122a1d;
     --warning: #f2b85c;
-    --warning-light: #3a2a12;
+    --warning-light: #2a1f0f;
     --danger: #f87171;
-    --text-secondary: #8fc9a8;
+    --text-secondary: #7a9c8a;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #081c15;
+  --bg: #050b08;
   --fg: #e7f7ec;
-  --card: #0f2b1f;
-  --card-alt: #123524;
-  --border: #1b4332;
+  --card: #0c1813;
+  --card-alt: #10211a;
+  --border: #1b2e25;
   --accent: #52b788;
-  --accent-light: #163d2b;
+  --accent-light: #122a1d;
   --success: #52b788;
-  --success-light: #163d2b;
+  --success-light: #122a1d;
   --warning: #f2b85c;
-  --warning-light: #3a2a12;
+  --warning-light: #2a1f0f;
   --danger: #f87171;
-  --text-secondary: #8fc9a8;
+  --text-secondary: #7a9c8a;
   color-scheme: dark;
 }
 
@@ -73,8 +77,8 @@ body {
   line-height: 1.5;
 }
 
-.container { max-width: 600px; margin: 0 auto; padding-block: 24px; padding-bottom: 88px; }
-.header { margin-bottom: 20px; }
+.container { max-width: 600px; margin: 0 auto; padding-block: 24px; }
+.header { margin-bottom: 0; }
 h1 { font-size: 28px; font-weight: 700; margin: 0; letter-spacing: -0.5px; color: var(--accent); }
 
 .tabs {
@@ -239,10 +243,9 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 
 /* Fridge bar */
 .fridge-bar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 500;
-  background: var(--card); border-top: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center; gap: 14px;
-  padding: 10px max(16px, env(safe-area-inset-left, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-right, 0px));
+  background: var(--card-alt); border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 14px; margin: 14px 0 20px;
 }
 .fridge-icon { font-size: 20px; }
 .fridge-label { font-size: 13px; color: var(--text-secondary); font-weight: 600; }
@@ -294,6 +297,14 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 <div class="container">
   <div class="header">
     <h1>Huize Noord</h1>
+  </div>
+
+  <div class="fridge-bar">
+    <span class="fridge-icon">🍺</span>
+    <span class="fridge-label">IJskast</span>
+    <button class="fridge-btn minus" id="fridgeMinus">−</button>
+    <span class="fridge-count" id="fridgeCount">-</span>
+    <button class="fridge-btn plus" id="fridgePlus">+</button>
   </div>
 
   <div class="tabs">
@@ -372,14 +383,6 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
   </div>
 </div>
 
-<div class="fridge-bar">
-  <span class="fridge-icon">🍺</span>
-  <span class="fridge-label">IJskast</span>
-  <button class="fridge-btn minus" id="fridgeMinus">−</button>
-  <span class="fridge-count" id="fridgeCount">-</span>
-  <button class="fridge-btn plus" id="fridgePlus">+</button>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -404,7 +407,7 @@ const db = getFirestore(app);
 const PEOPLE = ['Teun', 'Hidde', 'David', 'Boris']; // r0 index 0,1,2,3
 const ROOMS = ['Badkamer', 'Gangen', 'Keuken', 'Wc'];
 const ANCHOR = new Date(2026, 8, 7, 12, 0, 0); // maandag 7 sept 2026, 12:00 lokale tijd
-const KRYPTONITE = { Boris: 'Gluten', Hidde: "GHB'ers", David: 'Stabiele relaties', Teun: 'Hardlopen' };
+const ZWAKTE = { Boris: 'Gluten', Hidde: 'Knorren', David: 'Stabiele relaties', Teun: 'Hardlopen' };
 const GLUTEN_KEYWORDS = [
   'brood','pasta','bloem','koek','cracker','beschuit','pizza','bier','couscous',
   'gebak','deeg','noedel','cornflakes','muesli','soja','panko','paneermeel',
@@ -466,7 +469,7 @@ try { me = localStorage.getItem('huisapp_wie'); } catch {}
 function applyMeUI(){
   document.getElementById('meAvatar').src = me ? avatarSrc(me, 'lg') : '';
   document.getElementById('meName').textContent = me || '-';
-  renderKryptonite();
+  renderZwakte();
 }
 function setMe(person){
   me = person;
@@ -857,8 +860,8 @@ aanwezigList.querySelectorAll('.toggle-btn.eten').forEach(btn => {
   });
 });
 
-/* ---------- Account / Kryptonite ---------- */
-function renderKryptonite(){
+/* ---------- Account / Zwakte ---------- */
+function renderZwakte(){
   const grid = document.getElementById('kryptoniteGrid');
   grid.innerHTML = '';
   PEOPLE.forEach(person => {
@@ -867,13 +870,12 @@ function renderKryptonite(){
     card.innerHTML = `
       <img class="avatar avatar-md" src="${avatarSrc(person,'sm')}" alt="">
       <div class="kryptonite-name">${person}</div>
-      <div class="kryptonite-label">Kryptonite</div>
-      <div class="kryptonite-value">${KRYPTONITE[person]}</div>
+      <div class="kryptonite-value">Zwakte: ${ZWAKTE[person]}</div>
     `;
     grid.appendChild(card);
   });
 }
-renderKryptonite();
+renderZwakte();
 
 /* ---------- Ijskast ---------- */
 const fridgeRef = doc(db, 'fridge', 'beer');
