@@ -218,27 +218,69 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 .vote-score { min-width: 20px; text-align: center; font-weight: 700; font-size: 14px; }
 
 .aanwezig-row {
-  display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--card);
-  border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px;
 }
 .aanwezig-name { font-size: 14px; font-weight: 600; }
 .aanwezig-name.boris { color: var(--boris); }
 .aanwezig-name.hidde { color: var(--hidde); }
 .aanwezig-name.david { color: var(--david); }
 .aanwezig-name.teun { color: var(--teun); }
-.aanwezig-main { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 140px; }
+.aanwezig-main { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; overflow: hidden; }
 .toggle-group { display: flex; gap: 6px; }
 .toggle-btn { padding: 7px 10px; font-size: 15px; background: var(--card-alt); color: var(--fg); border: 1px solid var(--border); line-height: 1; }
 .toggle-btn.active.bier { background: var(--success); color: white; border-color: var(--success); }
 .toggle-btn.active.eten { background: var(--warning); color: white; border-color: var(--warning); }
-.aanwezig-row input[type="time"] { max-width: 110px; flex: none; padding: 8px; }
+.time-select {
+  flex: none; width: 74px; padding: 8px 4px; font-size: 15px; font-family: inherit; text-align: center; text-align-last: center;
+  background: var(--card-alt); color: var(--fg); border: 1px solid var(--border); border-radius: 8px;
+  -webkit-appearance: none; appearance: none; cursor: pointer;
+}
+.time-select.empty { color: var(--text-secondary); }
+.time-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+
+/* Header */
+.header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.weather {
+  display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600;
+  background: var(--card-alt); border: 1px solid var(--border); border-radius: 999px; padding: 6px 12px;
+  white-space: nowrap;
+}
+.weather-icon { font-size: 20px; line-height: 1; }
+.weather-place { font-size: 11px; color: var(--text-secondary); font-weight: 500; }
+
+/* Feitje */
+.fact-card {
+  background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--accent);
+  border-radius: 10px; padding: 12px 14px; font-size: 14px; margin-bottom: 4px;
+}
+.fact-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--accent); margin-bottom: 4px; }
 
 /* Home */
+.section-head { display: flex; align-items: center; justify-content: space-between; margin: 24px 0 10px; }
+.section-head .section-title { margin: 0; }
+.small-btn { padding: 6px 12px; font-size: 13px; }
+.event-form {
+  display: flex; flex-direction: column; gap: 8px; background: var(--card-alt); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px; margin-bottom: 10px;
+}
+.event-form-row { display: flex; gap: 8px; }
+.event-form input[type="date"] {
+  flex: 1; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card);
+  color: var(--fg); font-size: 16px; font-family: inherit; min-width: 0;
+}
 .event-list { display: flex; flex-direction: column; gap: 8px; }
 .event-card {
-  display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--card);
-  border: 1px solid var(--border); border-radius: 8px;
+  display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: border-color .2s, background .2s;
+  -webkit-tap-highlight-color: transparent;
 }
+.event-card.going { border-color: var(--accent); background: var(--accent-light); }
+.event-top { display: flex; align-items: center; gap: 12px; }
+.event-going { display: flex; align-items: center; gap: 4px; min-height: 30px; flex-wrap: wrap; }
+.event-going .avatar { width: 30px; height: 30px; }
+.event-hint { font-size: 12px; color: var(--text-secondary); }
+.event-del { padding: 4px 9px; font-size: 12px; background: none; color: var(--text-secondary); border: 1px solid var(--border); }
 .event-date-badge {
   background: var(--accent); color: white; border-radius: 8px; padding: 6px 10px; text-align: center;
   font-size: 12px; font-weight: 700; min-width: 48px; line-height: 1.2;
@@ -252,20 +294,32 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
   background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px 16px;
   margin-bottom: 4px;
 }
+.wheel-wrap { position: relative; width: 240px; height: 240px; }
+.wheel-pointer {
+  position: absolute; top: -6px; left: 50%; transform: translateX(-50%); z-index: 2;
+  width: 0; height: 0; border-left: 13px solid transparent; border-right: 13px solid transparent;
+  border-top: 24px solid var(--fg); filter: drop-shadow(0 2px 2px rgba(0,0,0,.35));
+}
+#wheel { width: 240px; height: 240px; display: block; transform: rotate(0deg); }
+#wheel.spinning { transition: transform 2.3s cubic-bezier(.12,.7,.18,1); }
 .spin-display {
-  font-size: 28px; font-weight: 800; color: var(--accent); min-height: 40px;
+  font-size: 24px; font-weight: 800; color: var(--accent); min-height: 34px;
   display: flex; align-items: center; justify-content: center;
 }
 #spinBtn { padding: 12px 32px; font-size: 15px; }
+#spinBtn:disabled { opacity: .6; }
 
 .match-list { display: flex; flex-direction: column; gap: 8px; }
 .match-card {
   display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--card);
   border: 1px solid var(--border); border-radius: 8px;
 }
-.match-comp { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent); min-width: 56px; }
-.match-info { flex: 1; }
-.match-teams { font-size: 14px; font-weight: 500; }
+.match-comp { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent); }
+.match-info { flex: 1; min-width: 0; }
+.match-teams { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.team { display: inline-flex; align-items: center; gap: 5px; }
+.team-logo { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
+.match-vs { color: var(--text-secondary); font-size: 12px; }
 .match-time { font-size: 12px; color: var(--text-secondary); }
 
 /* Account */
@@ -337,6 +391,11 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 <div class="container">
   <div class="header">
     <h1>Huize Noord</h1>
+    <div class="weather" id="weather" hidden>
+      <span class="weather-icon" id="weatherIcon"></span>
+      <span id="weatherTemp"></span>
+      <span class="weather-place">Groningen</span>
+    </div>
   </div>
 
   <div class="fridge-bar">
@@ -357,11 +416,30 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 
   <!-- Huis (home) -->
   <div id="home" class="section active">
-    <div class="section-title">Aankomende events</div>
+    <div class="fact-card">
+      <div class="fact-label">💡 Feitje van de dag</div>
+      <div id="factText"></div>
+    </div>
+
+    <div class="section-head">
+      <div class="section-title">Aankomende events</div>
+      <button class="small-btn" id="eventAddToggle">+ Toevoegen</button>
+    </div>
+    <div class="event-form" id="eventForm" hidden>
+      <input type="text" id="eventNameInput" placeholder="Naam van het event..." autocomplete="off">
+      <div class="event-form-row">
+        <input type="date" id="eventDateInput">
+        <button id="eventSaveBtn">Opslaan</button>
+      </div>
+    </div>
     <div class="event-list" id="eventList"></div>
 
     <div class="section-title">Wie trekt de bak</div>
     <div class="spin-game">
+      <div class="wheel-wrap">
+        <div class="wheel-pointer"></div>
+        <svg id="wheel" viewBox="0 0 240 240" aria-label="Rad"></svg>
+      </div>
       <div class="spin-display" id="spinDisplay">?</div>
       <button id="spinBtn">Spin</button>
     </div>
@@ -868,6 +946,15 @@ dishInput.addEventListener('keypress', e => { if (e.key === 'Enter') addDish(); 
 /* Aanwezig vanaf + bier/eten */
 const aanwezigList = document.getElementById('aanwezigList');
 let aanwezigCache = {};
+const TIME_SLOTS = (() => {
+  const s = [];
+  for (let m = 16*60; m <= 24*60 + 30; m += 15) {
+    const h = Math.floor(m/60) % 24, mm = m % 60;
+    s.push(`${String(h).padStart(2,'0')}:${String(mm).padStart(2,'0')}`);
+  }
+  return s;
+})();
+const TIME_OPTIONS = `<option value="">..:..</option>` + TIME_SLOTS.map(t => `<option value="${t}">${t}</option>`).join('');
 PEOPLE.forEach(person => {
   const row = document.createElement('div');
   row.className = 'aanwezig-row';
@@ -880,7 +967,7 @@ PEOPLE.forEach(person => {
       <button class="toggle-btn bier" data-person="${person}" title="Drinkt bier">🍺</button>
       <button class="toggle-btn eten" data-person="${person}" title="Eet mee">🍽️</button>
     </div>
-    <input type="time" data-person="${person}">
+    <select class="time-select empty" data-person="${person}" title="Aanwezig vanaf">${TIME_OPTIONS}</select>
   `;
   aanwezigList.appendChild(row);
 });
@@ -888,17 +975,22 @@ onSnapshot(huisavondDocRef, snap => {
   aanwezigCache = snap.data()?.aanwezig || {};
   PEOPLE.forEach(person => {
     const data = aanwezigCache[person] || {};
-    const timeInput = aanwezigList.querySelector(`input[type="time"][data-person="${person}"]`);
-    if (document.activeElement !== timeInput) timeInput.value = data.tijd || '';
+    const timeInput = aanwezigList.querySelector(`select.time-select[data-person="${person}"]`);
+    if (document.activeElement !== timeInput) {
+      const t = TIME_SLOTS.includes(data.tijd) ? data.tijd : '';
+      timeInput.value = t;
+      timeInput.classList.toggle('empty', !t);
+    }
     const bierBtn = aanwezigList.querySelector(`.toggle-btn.bier[data-person="${person}"]`);
     const etenBtn = aanwezigList.querySelector(`.toggle-btn.eten[data-person="${person}"]`);
     bierBtn.classList.toggle('active', !!data.bier);
     etenBtn.classList.toggle('active', !!data.eten);
   });
 });
-aanwezigList.querySelectorAll('input[type="time"]').forEach(input => {
+aanwezigList.querySelectorAll('select.time-select').forEach(input => {
   input.addEventListener('change', () => {
     const person = input.dataset.person;
+    input.classList.toggle('empty', !input.value);
     updateDoc(huisavondDocRef, { [`aanwezig.${person}.tijd`]: input.value });
   });
 });
@@ -951,6 +1043,106 @@ async function changeFridge(delta){
 document.getElementById('fridgePlus').addEventListener('click', () => changeFridge(1));
 document.getElementById('fridgeMinus').addEventListener('click', () => changeFridge(-1));
 
+/* ---------- Huis (home): weer ---------- */
+function weatherEmoji(code, isDay){
+  if (code === 0) return isDay ? '☀️' : '🌙';
+  if (code === 1) return isDay ? '🌤️' : '🌙';
+  if (code === 2) return '⛅';
+  if (code === 3) return '☁️';
+  if (code === 45 || code === 48) return '🌫️';
+  if (code >= 51 && code <= 57) return '🌦️';
+  if (code >= 61 && code <= 67) return '🌧️';
+  if (code >= 71 && code <= 77) return '❄️';
+  if (code >= 80 && code <= 82) return '🌧️';
+  if (code === 85 || code === 86) return '🌨️';
+  if (code >= 95) return '⛈️';
+  return '🌡️';
+}
+async function loadWeather(){
+  try {
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=53.2194&longitude=6.5665&current=temperature_2m,weather_code,is_day&timezone=Europe%2FAmsterdam';
+    const res = await fetch(url);
+    if (!res.ok) return;
+    const data = await res.json();
+    const c = data.current;
+    document.getElementById('weatherIcon').textContent = weatherEmoji(c.weather_code, c.is_day === 1);
+    document.getElementById('weatherTemp').textContent = `${Math.round(c.temperature_2m)}°C`;
+    document.getElementById('weather').hidden = false;
+  } catch (e) {}
+}
+loadWeather();
+setInterval(loadWeather, 15 * 60 * 1000);
+
+/* ---------- Huis (home): feitje van de dag ---------- */
+const FACTS = [
+  'Een octopus heeft drie harten en blauw bloed.',
+  'Honing bederft niet. In Egyptische graven is eetbare honing van duizenden jaren oud gevonden.',
+  'Nederland telt meer fietsen dan inwoners: zo\'n 23 miljoen fietsen.',
+  'Bananen zijn botanisch gezien bessen, aardbeien niet.',
+  'Een dag op Venus duurt langer dan een jaar op Venus.',
+  'De Martinitoren in Groningen is bijna 97 meter hoog.',
+  'Koeien hebben vaak een beste vriendin en raken gestrest als ze gescheiden worden.',
+  'Het Eiffeltoren-ijzer zet in de zomer uit, waardoor de toren tot zo\'n 15 cm hoger wordt.',
+  'Flamingo\'s zijn roze door de pigmenten in de garnaaltjes en algen die ze eten.',
+  'Sommige schildpadden kunnen ademen via hun achterwerk.',
+  'De kortste oorlog uit de geschiedenis (Engeland tegen Zanzibar, 1896) duurde ongeveer 38 minuten.',
+  'Wombats poepen kubusvormige keutels.',
+  'Zo\'n 26% van Nederland ligt onder zeeniveau.',
+  'Een kolibrie kan als enige vogel achteruit vliegen.',
+  'Pinda\'s zijn geen noten maar peulvruchten.',
+  'Er zijn meer mogelijke schaakpartijen dan atomen in het waarneembare heelal.',
+  'De Afsluitdijk is ruim 32 kilometer lang.',
+  'Een groep flamingo\'s heet in het Engels een "flamboyance".',
+  'Je kunt niet neuriën terwijl je je neus dichtknijpt.',
+  'Haaien bestonden al vóór er bomen op aarde waren.',
+  'Nederlanders zijn gemiddeld de langste mensen ter wereld.',
+  'Een blauwe vinvis heeft een hart zo groot als een kleine auto.',
+  'Op Mars zijn zonsondergangen blauw.',
+  'Het woord "robot" komt van het Tsjechische "robota", dat dwangarbeid betekent.',
+  'Een zeeotter houdt tijdens het slapen pootjes vast met andere otters om niet weg te drijven.',
+  'Oxford University is ouder dan het Azteekse rijk.',
+  'Kreeften werden vroeger zo goedkoop gevonden dat ze aan gevangenen werden gevoerd.',
+  'Een octopus kan proeven met zijn zuignappen.',
+  'Licht van de zon doet er ruim 8 minuten over om de aarde te bereiken.',
+  'Groningen is met ongeveer een kwart studenten een van de jongste steden van Nederland.',
+  'Ketchup werd in de jaren 1830 als medicijn verkocht.',
+  'Het hart van een garnaal zit in zijn hoofd.',
+  'Er wonen meer kippen op aarde dan mensen.',
+  'Goudse kaas is vernoemd naar de stad Gouda, waar de kaas vroeger verhandeld werd.',
+  'Een uil kan zijn kop ongeveer 270 graden draaien.',
+  'Bliksem is ongeveer vijf keer zo heet als het oppervlak van de zon.',
+  'Water kan tegelijk koken en bevriezen, bij het zogeheten tripelpunt.',
+  'Een giraffe slaapt vaak maar zo\'n 30 minuten tot 2 uur per dag.',
+  'Pils is vernoemd naar de Tsjechische stad Pilsen, waar het in 1842 werd uitgevonden.',
+  'Een sint-jakobsschelp heeft tot wel 200 oogjes.',
+  'Het geluid van een zweepslag is een kleine supersonische knal.',
+  'Mieren slapen niet zoals wij, maar doen honderden powernaps per dag.',
+  'Schotland heeft de eenhoorn als nationaal dier.',
+  'Het menselijk lichaam van een volwassene telt 206 botten.',
+  'Een rendier kan in ultraviolet licht zien.',
+  'De stroopwafel komt oorspronkelijk uit Gouda.',
+  'Vlinders proeven met hun pootjes.',
+  'Het internationale ruimtestation draait in ongeveer 90 minuten een rondje om de aarde.',
+  'Een paard kan niet overgeven.',
+  'Koala\'s slapen tot wel 20 uur per dag.',
+  'De Eredivisie bestaat sinds 1956.',
+  'Een tomaat is botanisch gezien een vrucht.',
+  'Een pinguïn heeft knieën, ze zitten alleen verstopt onder de veren.',
+  'De Nederlandse vlag is een van de oudste driekleuren ter wereld.',
+  'Dolfijnen geven elkaar een eigen fluitsignaal dat werkt als een naam.',
+  'Het menselijk lichaam bevat genoeg ijzer voor een spijker van een paar centimeter.',
+  'Een kat heeft 32 spieren in elk oor.',
+  'Er zijn meer bomen op aarde dan sterren in de Melkweg.',
+  'De frikandel is in de jaren vijftig in Nederland bedacht.',
+  'Wasberen wassen hun eten niet echt, ze voelen het met natte pootjes beter.'
+];
+(function(){
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((now - start) / 86400000);
+  document.getElementById('factText').textContent = FACTS[(dayOfYear + now.getFullYear()) % FACTS.length];
+})();
+
 /* ---------- Huis (home): events ---------- */
 function getNextWeekday(now, targetDay){
   const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -963,76 +1155,260 @@ function daysUntil(now, target){
   const b = new Date(target.getFullYear(), target.getMonth(), target.getDate());
   return Math.round((b - a) / (24*60*60*1000));
 }
+function parseDay(s){ const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); }
+
 const todayForEvents = new Date();
-const ludoweenDate = new Date(2026, 10, 28); // 28 nov 2026
 const goldcupDate = getNextWeekday(todayForEvents, 4); // donderdag
-
-const EVENTS = [
-  { date: ludoweenDate, name: 'Ludoween' },
-  { date: goldcupDate, name: 'Gold Cup GCHC', sub: 'Deze donderdag' }
-].sort((a,b) => a.date - b.date);
-
+const BUILTIN_EVENTS = [
+  { id: 'ludoween-2026', name: 'Ludoween', date: '2026-11-28', builtin: true },
+  { id: `goldcup-${fmtDate(goldcupDate)}`, name: 'Gold Cup GCHC', date: fmtDate(goldcupDate), sub: 'Deze donderdag', builtin: true }
+];
+const eventsCol = collection(db, 'events');
 const eventList = document.getElementById('eventList');
-EVENTS.forEach(ev => {
-  const days = daysUntil(todayForEvents, ev.date);
-  const daysLabel = days === 0 ? 'Vandaag' : days === 1 ? 'Morgen' : `Over ${days} dagen`;
-  const card = document.createElement('div');
-  card.className = 'event-card';
-  card.innerHTML = `
-    <div class="event-date-badge">${ev.date.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })}</div>
-    <div class="event-info">
-      <div class="event-name">${ev.name}</div>
-      <div class="event-sub">${ev.sub ? ev.sub + ' · ' : ''}${daysLabel}</div>
-    </div>
-  `;
-  eventList.appendChild(card);
-});
+let eventDocs = {};
 
-/* ---------- Wie trekt de bak ---------- */
+function renderEvents(){
+  const todayKey = fmtDate(new Date());
+  const all = [
+    ...BUILTIN_EVENTS.map(e => ({ ...e, going: eventDocs[e.id]?.going || {} })),
+    ...Object.entries(eventDocs)
+      .filter(([, d]) => d.name && d.date)
+      .map(([id, d]) => ({ id, name: d.name, date: d.date, author: d.author, going: d.going || {} }))
+  ].filter(e => e.date >= todayKey).sort((a,b) => a.date.localeCompare(b.date));
+
+  eventList.innerHTML = '';
+  if (all.length === 0) {
+    eventList.innerHTML = '<div class="empty-state">Geen events gepland.</div>';
+    return;
+  }
+  all.forEach(ev => {
+    const date = parseDay(ev.date);
+    const days = daysUntil(new Date(), date);
+    const daysLabel = days === 0 ? 'Vandaag' : days === 1 ? 'Morgen' : `Over ${days} dagen`;
+    const goingPeople = PEOPLE.filter(p => ev.going[p]);
+    const iGo = !!(me && ev.going[me]);
+    const card = document.createElement('div');
+    card.className = 'event-card' + (iGo ? ' going' : '');
+    card.innerHTML = `
+      <div class="event-top">
+        <div class="event-date-badge">${date.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })}</div>
+        <div class="event-info">
+          <div class="event-name">${escapeHtml(ev.name)}</div>
+          <div class="event-sub">${ev.sub ? ev.sub + ' · ' : ''}${daysLabel}${ev.author ? ' · door ' + escapeHtml(ev.author) : ''}</div>
+        </div>
+        ${ev.builtin ? '' : '<button class="event-del" title="Verwijderen">✕</button>'}
+      </div>
+      <div class="event-going">
+        ${goingPeople.length
+          ? goingPeople.map(p => `<img class="avatar" src="${avatarSrc(p,'sm')}" alt="${p}" title="${p} gaat mee">`).join('')
+          : `<span class="event-hint">Tik om aan te geven dat je meegaat</span>`}
+      </div>
+    `;
+    card.addEventListener('click', () => {
+      if (!me) { showToast('Kies eerst wie je bent'); return; }
+      setDoc(doc(db, 'events', ev.id), { going: { [me]: iGo ? deleteField() : true } }, { merge: true })
+        .catch(err => showToast('Opslaan mislukt (' + (err.code || 'fout') + ')'));
+    });
+    const del = card.querySelector('.event-del');
+    if (del) del.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (confirm(`"${ev.name}" verwijderen?`)) deleteDoc(doc(db, 'events', ev.id));
+    });
+    eventList.appendChild(card);
+  });
+}
+renderEvents();
+onSnapshot(eventsCol, snap => {
+  eventDocs = {};
+  snap.forEach(d => { eventDocs[d.id] = d.data(); });
+  renderEvents();
+}, () => {});
+
+const eventForm = document.getElementById('eventForm');
+const eventNameInput = document.getElementById('eventNameInput');
+const eventDateInput = document.getElementById('eventDateInput');
+document.getElementById('eventAddToggle').addEventListener('click', () => {
+  eventForm.hidden = !eventForm.hidden;
+  if (!eventForm.hidden) {
+    eventDateInput.min = fmtDate(new Date());
+    if (!eventDateInput.value) eventDateInput.value = fmtDate(new Date());
+    eventNameInput.focus();
+  }
+});
+function saveEvent(){
+  const name = eventNameInput.value.trim();
+  const date = eventDateInput.value;
+  if (!name) { showToast('Vul een naam in'); return; }
+  if (!date) { showToast('Kies een datum'); return; }
+  addDoc(eventsCol, { name, date, author: me || null, going: me ? { [me]: true } : {}, createdAt: serverTimestamp() })
+    .then(() => { eventNameInput.value = ''; eventForm.hidden = true; showToast('Event toegevoegd'); })
+    .catch(err => showToast('Opslaan mislukt (' + (err.code || 'fout') + ')'));
+}
+document.getElementById('eventSaveBtn').addEventListener('click', saveEvent);
+eventNameInput.addEventListener('keypress', e => { if (e.key === 'Enter') saveEvent(); });
+
+/* ---------- Wie trekt de bak (rad) ---------- */
+const WHEEL_COLORS = { Teun: '#06b6d4', Hidde: '#f59e0b', David: '#8b5cf6', Boris: '#ec4899' };
+const wheel = document.getElementById('wheel');
+(function drawWheel(){
+  const cx = 120, cy = 120, r = 116;
+  const n = PEOPLE.length, seg = 360 / n;
+  const pt = (deg, rad) => {
+    const a = deg * Math.PI / 180;
+    return [cx + rad * Math.sin(a), cy - rad * Math.cos(a)];
+  };
+  let svg = '<defs>';
+  PEOPLE.forEach((p, i) => {
+    const [x, y] = pt(i*seg + seg/2, 64);
+    svg += `<clipPath id="wc${i}"><circle cx="${x}" cy="${y}" r="24"/></clipPath>`;
+  });
+  svg += '</defs>';
+  PEOPLE.forEach((p, i) => {
+    const [x1, y1] = pt(i*seg, r);
+    const [x2, y2] = pt((i+1)*seg, r);
+    svg += `<path d="M${cx},${cy} L${x1},${y1} A${r},${r} 0 0 1 ${x2},${y2} Z" fill="${WHEEL_COLORS[p]}" stroke="#ffffff" stroke-width="3"/>`;
+  });
+  PEOPLE.forEach((p, i) => {
+    const mid = i*seg + seg/2;
+    const [x, y] = pt(mid, 64);
+    svg += `<circle cx="${x}" cy="${y}" r="26" fill="#ffffff"/>`;
+    svg += `<image href="${avatarSrc(p,'sm')}" x="${x-24}" y="${y-24}" width="48" height="48" clip-path="url(#wc${i})" preserveAspectRatio="xMidYMid slice"/>`;
+    const [tx, ty] = pt(mid, 102);
+    svg += `<text x="${tx}" y="${ty}" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle" dominant-baseline="middle" transform="rotate(${mid} ${tx} ${ty})" font-family="-apple-system, sans-serif">${p}</text>`;
+  });
+  svg += `<circle cx="${cx}" cy="${cy}" r="14" fill="#ffffff" stroke="rgba(0,0,0,.15)" stroke-width="2"/>`;
+  wheel.innerHTML = svg;
+})();
+
 const spinDisplay = document.getElementById('spinDisplay');
 const spinBtn = document.getElementById('spinBtn');
+let wheelRotation = 0;
 spinBtn.addEventListener('click', () => {
   spinBtn.disabled = true;
-  const total = 22;
+  spinDisplay.textContent = '...';
+  const seg = 360 / PEOPLE.length;
   const finalIndex = Math.floor(Math.random() * PEOPLE.length);
-  let step = 0;
-  let delay = 60;
-  function tick(){
-    const idx = step === total - 1 ? finalIndex : Math.floor(Math.random() * PEOPLE.length);
-    spinDisplay.textContent = PEOPLE[idx];
-    step++;
-    if (step < total) {
-      delay += 12;
-      setTimeout(tick, delay);
-    } else {
-      spinBtn.disabled = false;
-      burstConfetti(spinDisplay);
-      showToast(`🍻 ${PEOPLE[finalIndex]} trekt de bak!`);
-    }
-  }
-  tick();
+  const center = finalIndex * seg + seg / 2;
+  const jitter = (Math.random() - 0.5) * seg * 0.7;
+  const base = wheelRotation - (wheelRotation % 360);
+  wheelRotation = base + 4 * 360 + (360 - center + jitter);
+  wheel.classList.add('spinning');
+  wheel.style.transform = `rotate(${wheelRotation}deg)`;
+  setTimeout(() => {
+    wheel.classList.remove('spinning');
+    spinBtn.disabled = false;
+    spinDisplay.textContent = PEOPLE[finalIndex];
+    burstConfetti(spinDisplay);
+    showToast(`🍻 ${PEOPLE[finalIndex]} trekt de bak!`);
+  }, 2350);
 });
 
 /* ---------- Wedstrijden ---------- */
-const MATCHES = [
-  { comp: 'Eredivisie', teams: 'FC Utrecht — Telstar', time: 'zo 1 nov, 14:30 (uit)' },
-  { comp: 'Eredivisie', teams: 'Excelsior — FC Twente', time: 'zo 1 nov, 14:30 (uit)' },
-  { comp: 'Eredivisie', teams: 'FC Groningen — Sparta R.', time: 'zo 1 nov, 16:45 (thuis)' },
-  { comp: 'Formule 1', teams: 'Mexicaanse Grand Prix', time: 'zo 1 nov' }
+// Logo's: images/logos/<slug>.png  (bijv. images/logos/fc-groningen.png)
+const TEAM_SLUG = {
+  'FC Groningen': 'fc-groningen', 'FC Utrecht': 'fc-utrecht', 'FC Twente': 'fc-twente',
+  'Ajax': 'ajax', 'PSV': 'psv', 'Feyenoord': 'feyenoord', 'AZ': 'az', 'NEC': 'nec',
+  'Telstar': 'telstar', 'Excelsior': 'excelsior', 'Sparta R.': 'sparta', 'sc Heerenveen': 'heerenveen',
+  'Willem II': 'willem-ii', 'SC Cambuur': 'cambuur', 'ADO Den Haag': 'ado-den-haag',
+  'Fortuna Sittard': 'fortuna-sittard', 'PEC Zwolle': 'pec-zwolle', 'Go Ahead Eagles': 'go-ahead-eagles'
+};
+const FOLLOW = ['FC Groningen', 'FC Utrecht', 'FC Twente'];
+const ED = (at, home, away) => ({ comp: 'Eredivisie', at, home, away });
+const FIXTURES = [
+  // FC Groningen
+  ED('2026-11-01T16:45', 'FC Groningen', 'Sparta R.'),
+  ED('2026-11-08T16:45', 'AZ', 'FC Groningen'),
+  ED('2026-11-21T21:00', 'FC Groningen', 'sc Heerenveen'),
+  ED('2026-11-27T20:00', 'FC Groningen', 'Willem II'),
+  ED('2026-12-04T20:00', 'Telstar', 'FC Groningen'),
+  ED('2026-12-13T14:30', 'FC Groningen', 'Feyenoord'),
+  ED('2026-12-20T14:30', 'SC Cambuur', 'FC Groningen'),
+  ED('2027-01-10T16:45', 'FC Groningen', 'Go Ahead Eagles'),
+  ED('2027-01-17T14:30', 'Ajax', 'FC Groningen'),
+  ED('2027-01-24T14:30', 'Sparta R.', 'FC Groningen'),
+  ED('2027-01-31T16:45', 'FC Groningen', 'NEC'),
+  // FC Utrecht
+  ED('2026-11-01T14:30', 'Telstar', 'FC Utrecht'),
+  ED('2026-11-08T20:00', 'FC Utrecht', 'NEC'),
+  ED('2026-11-21T18:45', 'FC Utrecht', 'SC Cambuur'),
+  ED('2026-11-29T12:15', 'ADO Den Haag', 'FC Utrecht'),
+  ED('2026-12-06T14:30', 'Ajax', 'FC Utrecht'),
+  ED('2026-12-12T16:30', 'FC Utrecht', 'Fortuna Sittard'),
+  ED('2026-12-19T21:00', 'FC Utrecht', 'sc Heerenveen'),
+  ED('2027-01-09T18:45', 'PEC Zwolle', 'FC Utrecht'),
+  ED('2027-01-17T12:15', 'FC Utrecht', 'FC Twente'),
+  ED('2027-01-24T16:45', 'AZ', 'FC Utrecht'),
+  ED('2027-01-29T20:00', 'FC Utrecht', 'Excelsior'),
+  // FC Twente
+  ED('2026-11-01T14:30', 'Excelsior', 'FC Twente'),
+  ED('2026-11-08T14:30', 'FC Twente', 'Ajax'),
+  ED('2026-11-22T12:15', 'FC Twente', 'Willem II'),
+  ED('2026-11-29T20:00', 'NEC', 'FC Twente'),
+  ED('2026-12-06T14:30', 'Go Ahead Eagles', 'FC Twente'),
+  ED('2026-12-20T14:30', 'Feyenoord', 'FC Twente'),
+  ED('2027-01-08T20:00', 'FC Twente', 'Fortuna Sittard'),
+  ED('2027-01-23T20:00', 'FC Twente', 'sc Heerenveen'),
+  ED('2027-01-31T14:30', 'FC Twente', 'SC Cambuur')
 ];
-const matchList = document.getElementById('matchList');
-MATCHES.forEach(m => {
-  const card = document.createElement('div');
-  card.className = 'match-card';
-  card.innerHTML = `
-    <div class="match-comp">${m.comp}</div>
-    <div class="match-info">
-      <div class="match-teams">${m.teams}</div>
-      <div class="match-time">${m.time}</div>
-    </div>
-  `;
-  matchList.appendChild(card);
-});
+const F1_RACES = [
+  { at: '2026-11-01T21:00', name: 'GP Mexico' },
+  { at: '2026-11-08T18:00', name: 'GP São Paulo' },
+  { at: '2026-11-22T05:00', name: 'GP Las Vegas' },
+  { at: '2026-11-29T17:00', name: 'GP Qatar' },
+  { at: '2026-12-06T14:00', name: 'GP Abu Dhabi' }
+];
+const MATCH_DONE_MS = 2.5 * 60 * 60 * 1000; // na aftrap + 2,5 uur door naar volgende ronde
+
+function teamHtml(name){
+  const slug = TEAM_SLUG[name];
+  const logo = slug ? `<img class="team-logo" src="images/logos/${slug}.png" alt="" onerror="this.remove()">` : '';
+  return `<span class="team">${logo}${escapeHtml(name)}</span>`;
+}
+function fmtMatchTime(d, withTime = true){
+  const day = d.toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short' });
+  return withTime ? `${day}, ${d.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}` : day;
+}
+function renderMatches(){
+  const now = Date.now();
+  const upcoming = (list) => list
+    .map(m => ({ ...m, d: new Date(m.at) }))
+    .filter(m => m.d.getTime() + MATCH_DONE_MS > now)
+    .sort((a,b) => a.d - b.d);
+  const items = [];
+  const seen = new Set();
+  FOLLOW.forEach(team => {
+    const next = upcoming(FIXTURES.filter(m => m.home === team || m.away === team))[0];
+    if (next && !seen.has(next.at + next.home)) { seen.add(next.at + next.home); items.push(next); }
+  });
+  const nextF1 = upcoming(F1_RACES)[0];
+  if (nextF1) items.push({ ...nextF1, comp: 'Formule 1' });
+  items.sort((a,b) => a.d - b.d);
+
+  const matchList = document.getElementById('matchList');
+  matchList.innerHTML = '';
+  if (items.length === 0) {
+    matchList.innerHTML = '<div class="empty-state">Geen wedstrijden gepland.</div>';
+    return;
+  }
+  items.forEach(m => {
+    const live = m.d.getTime() <= now;
+    const card = document.createElement('div');
+    card.className = 'match-card';
+    const teams = m.comp === 'Formule 1'
+      ? `<span class="team"><img class="team-logo" src="images/logos/f1.png" alt="" onerror="this.remove()">${m.name}</span>`
+      : `${teamHtml(m.home)}<span class="match-vs">vs</span>${teamHtml(m.away)}`;
+    card.innerHTML = `
+      <div class="match-info">
+        <div class="match-comp">${m.comp}</div>
+        <div class="match-teams">${teams}</div>
+        <div class="match-time">${live ? '🔴 Bezig · ' : ''}${fmtMatchTime(m.d, m.comp !== 'Formule 1')}</div>
+      </div>
+    `;
+    matchList.appendChild(card);
+  });
+}
+renderMatches();
+setInterval(renderMatches, 5 * 60 * 1000);
 </script>
 </body>
 </html>
