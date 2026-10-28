@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Huize Noord">
 <!-- Ophogen bij elke update, dan herladen alle telefoons vanzelf -->
-<meta name="app-version" content="2026-10-28.6">
+<meta name="app-version" content="2026-10-28.7">
 <script>
 /* Auto-update: vergelijkt de versie hierboven met de nieuwste index.html op de server */
 (function(){
@@ -135,7 +135,9 @@ h1 { font-size: 28px; font-weight: 700; margin: 0; letter-spacing: -0.5px; color
 .kj-card td { padding:5px 2px; border-bottom:1px solid var(--border); }
 .kj-card tr:last-child td { border-bottom:0; }
 .kj-card td.n { text-align:right; font-weight:700; }
-.kj-rule { display:grid; grid-template-columns:auto 1fr; gap:6px 14px; align-items:baseline; }
+
+.kj-rule .row{display:grid;grid-template-columns:8.5em 1fr;gap:12px;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--border)}
+.kj-rule .row:last-child{border-bottom:0}
 .kj-rule b { white-space:nowrap; font-variant-numeric:tabular-nums; }
 
 .section { display: none; }
@@ -575,16 +577,16 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
     </div>
 
     <div class="section-title">Puntentelling</div>
-    <div class="kj-card"><div class="kj-rule"><b>162</b><span>Totaal te behalen bij troef spelen (op papier 16)</span><b>130</b><span>Totaal te behalen bij sans spelen (op papier 13)</span><b>vanaf 7</b><span>Afronden naar boven</span><b>+10</b><span>Laatste slag</span><b>Nat</b><span>Bod niet gehaald: 16 punten voor de tegenstander</span><b>Verzaken</b><span>26 punten voor de tegenstander</span><b>Pit gehaald</b><span>Liter voor de tegenstander</span><b>Pit niet gehaald</b><span>Zelf een halve liter</span></div></div>
+    <div class="kj-card"><div class="kj-rule"><div class="row"><b>162</b><span>Totaal te behalen bij troef spelen (op papier 16)</span></div><div class="row"><b>130</b><span>Totaal te behalen bij sans spelen (op papier 13)</span></div><div class="row"><b>vanaf 7</b><span>Afronden naar boven</span></div><div class="row"><b>+10</b><span>Laatste slag</span></div><div class="row"><b>Nat</b><span>Bod niet gehaald: 16 punten voor de tegenstander</span></div><div class="row"><b>Verzaken</b><span>26 punten voor de tegenstander</span></div><div class="row"><b>Pit gehaald</b><span>Liter voor de tegenstander</span></div><div class="row"><b>Pit niet gehaald</b><span>Zelf een halve liter</span></div></div></div>
 
     <div class="section-title">Seinen tijdens bieden</div>
-    <div class="kj-card"><div class="kj-rule"><b>70 sans</b><span>Veel Boeren en 9's</span><b>80 sans</b><span>Veel Azen en 10's</span></div></div>
+    <div class="kj-card"><div class="kj-rule"><div class="row"><b>70 sans</b><span>Veel Boeren en 9's</span></div><div class="row"><b>80 sans</b><span>Veel Azen en 10's</span></div></div></div>
 
     <div class="section-title">Seinen tijdens spel</div>
-    <div class="kj-card"><div class="kj-rule"><b>Wanneer</b><span>Als je maat aan slag ligt</span><b>7, 8, 9</b><span>Aanseinen: ik heb de Aas (of hoogste), speel dit</span><b>B, V, H, 10</b><span>Afseinen: ik heb lage kaarten, niet spelen</span></div></div>
+    <div class="kj-card"><div class="kj-rule"><div class="row"><b>Wanneer</b><span>Als je maat aan slag ligt</span></div><div class="row"><b>7, 8, 9</b><span>Aanseinen: ik heb de Aas (of hoogste), speel dit</span></div><div class="row"><b>B, V, H, 10</b><span>Afseinen: ik heb lage kaarten, niet spelen</span></div></div></div>
 
     <div class="section-title">Klopjes (op papier)</div>
-    <div class="kj-card"><div class="kj-rule"><b>2</b><span>Stuk: Heer + Vrouw van troef</span><b>2</b><span>3 op rij</span><b>5</b><span>4 op rij</span><b>7</b><span>4 op rij met stuk erin</span><b>0</b><span>Kaarten aangeraakt en niet geklopt: telt niet</span><b>2</b><span>Foutief geklopt: voor de tegenstander</span></div></div>
+    <div class="kj-card"><div class="kj-rule"><div class="row"><b>2</b><span>Stuk: Heer + Vrouw van troef</span></div><div class="row"><b>2</b><span>3 op rij</span></div><div class="row"><b>5</b><span>4 op rij</span></div><div class="row"><b>7</b><span>4 op rij met stuk erin</span></div><div class="row"><b>0</b><span>Kaarten aangeraakt en niet geklopt: telt niet</span></div><div class="row"><b>2</b><span>Foutief geklopt: voor de tegenstander</span></div></div></div>
   </div>
 
   <!-- Account -->
