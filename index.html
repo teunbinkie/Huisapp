@@ -286,7 +286,8 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
   font-size: 12px; font-weight: 700; min-width: 48px; line-height: 1.2;
 }
 .event-info { flex: 1; }
-.event-name { font-size: 15px; font-weight: 600; }
+.event-name { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.event-logo { width: 22px; height: 22px; object-fit: contain; }
 .event-sub { font-size: 12px; color: var(--text-secondary); }
 
 .spin-game {
@@ -318,7 +319,7 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 .match-info { flex: 1; min-width: 0; }
 .match-teams { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .team { display: inline-flex; align-items: center; gap: 5px; }
-.team-logo { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
+.team-logo { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; }
 .match-vs { color: var(--text-secondary); font-size: 12px; }
 .match-time { font-size: 12px; color: var(--text-secondary); }
 
@@ -1161,7 +1162,7 @@ const todayForEvents = new Date();
 const goldcupDate = getNextWeekday(todayForEvents, 4); // donderdag
 const BUILTIN_EVENTS = [
   { id: 'ludoween-2026', name: 'Ludoween', date: '2026-11-28', builtin: true },
-  { id: `goldcup-${fmtDate(goldcupDate)}`, name: 'Gold Cup GCHC', date: fmtDate(goldcupDate), sub: 'Deze donderdag', builtin: true }
+  { id: `goldcup-${fmtDate(goldcupDate)}`, name: 'Gold Cup GCHC', date: fmtDate(goldcupDate), sub: 'Deze donderdag', logo: 'images/logos/gchc.png', builtin: true }
 ];
 const eventsCol = collection(db, 'events');
 const eventList = document.getElementById('eventList');
@@ -1193,7 +1194,7 @@ function renderEvents(){
       <div class="event-top">
         <div class="event-date-badge">${date.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })}</div>
         <div class="event-info">
-          <div class="event-name">${escapeHtml(ev.name)}</div>
+          <div class="event-name">${ev.logo ? `<img class="event-logo" src="${ev.logo}" alt="" onerror="this.remove()">` : ''}${escapeHtml(ev.name)}</div>
           <div class="event-sub">${ev.sub ? ev.sub + ' · ' : ''}${daysLabel}${ev.author ? ' · door ' + escapeHtml(ev.author) : ''}</div>
         </div>
         ${ev.builtin ? '' : '<button class="event-del" title="Verwijderen">✕</button>'}
@@ -1304,13 +1305,9 @@ spinBtn.addEventListener('click', () => {
 });
 
 /* ---------- Wedstrijden ---------- */
-// Logo's: images/logos/<slug>.png  (bijv. images/logos/fc-groningen.png)
+// Logo's (alleen onze clubs): images/logos/<slug>.png
 const TEAM_SLUG = {
-  'FC Groningen': 'fc-groningen', 'FC Utrecht': 'fc-utrecht', 'FC Twente': 'fc-twente',
-  'Ajax': 'ajax', 'PSV': 'psv', 'Feyenoord': 'feyenoord', 'AZ': 'az', 'NEC': 'nec',
-  'Telstar': 'telstar', 'Excelsior': 'excelsior', 'Sparta R.': 'sparta', 'sc Heerenveen': 'heerenveen',
-  'Willem II': 'willem-ii', 'SC Cambuur': 'cambuur', 'ADO Den Haag': 'ado-den-haag',
-  'Fortuna Sittard': 'fortuna-sittard', 'PEC Zwolle': 'pec-zwolle', 'Go Ahead Eagles': 'go-ahead-eagles'
+  'FC Groningen': 'fc-groningen', 'FC Utrecht': 'fc-utrecht', 'FC Twente': 'fc-twente'
 };
 const FOLLOW = ['FC Groningen', 'FC Utrecht', 'FC Twente'];
 const ED = (at, home, away) => ({ comp: 'Eredivisie', at, home, away });
