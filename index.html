@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Huize Noord">
 <!-- Ophogen bij elke update, dan herladen alle telefoons vanzelf -->
-<meta name="app-version" content="2026-10-28.8">
+<meta name="app-version" content="2026-10-28.9">
 <script>
 /* Auto-update: vergelijkt de versie hierboven met de nieuwste index.html op de server */
 (function(){
@@ -861,7 +861,6 @@ const PZ_DATA = (() => {
     return JSON.parse(s);
   } catch (e) { return {}; }
 })();
-const PZ_MAX_WRONG = 5;
 const pzWeek = currentN;
 const pzPuzzle = PZ_DATA[pzWeek];
 const pzCard = document.getElementById('pzCard');
@@ -925,7 +924,7 @@ function renderPuzzel(){
   let body = '';
   if (!pzPuzzle) body = '';
   else if (!me) body = '<div class="pz-sub">Kies eerst wie je bent.</div>';
-  else if (!pzMine) body = `<div class="pz-sub">9 woorden, 3 verbanden. Typ het begrip dat steeds 3 woorden verbindt. Je hebt één poging en mag ${PZ_MAX_WRONG} keer fout zitten.</div>
+  else if (!pzMine) body = `<div class="pz-sub">9 woorden, 3 verbanden. Typ het begrip dat steeds 3 woorden verbindt. Je hebt één poging, fout raden mag zo vaak als je wilt.</div>
     <button id="pzStart">Start puzzel</button>`;
   else if (pzMine.done) body = `<div class="pz-done"><span>✅ Puzzelronde gespeeld</span><span class="pz-done-score">${pzMine.found.length}/3 · ${fmtMs(pzMine.ms)}</span></div>`;
   else {
@@ -938,7 +937,7 @@ function renderPuzzel(){
     body = `<div class="pz-grid">${tiles}</div>
       ${labels ? `<div class="pz-chips">${labels}</div>` : ''}
       <form class="pz-row" id="pzForm"><input type="text" id="pzInput" placeholder="Typ een verband..." autocomplete="off" autocapitalize="off"><button type="submit">Check</button></form>
-      <div class="pz-meta"><span>Fout: ${pzMine.wrong || 0}/${PZ_MAX_WRONG}</span><span id="pzTime">${fmtMs(Date.now() - pzMine.startedAt)}</span><button type="button" class="ghost small-btn" id="pzStop">Stoppen</button></div>`;
+      <div class="pz-meta"><span>Fout: ${pzMine.wrong || 0}</span><span id="pzTime">${fmtMs(Date.now() - pzMine.startedAt)}</span><button type="button" class="ghost small-btn" id="pzStop">Stoppen</button></div>`;
   }
   pzCard.innerHTML = `<div class="fact-label">🧩 Puzzelronde · week ${pzWeekNo(pzWeek)}</div>${body}${winner}`;
   const start = document.getElementById('pzStart'); if (start) start.onclick = pzStart;
@@ -978,10 +977,8 @@ async function pzGuess(){
     if (done) { burstConfetti(pzCard); showToast(`Alle verbanden in ${fmtMs(ms)}!`); }
     else showToast(`✓ ${pzPuzzle.g[idx].n}`);
   } else {
-    const wrong = (pzMine.wrong || 0) + 1;
-    const done = wrong >= PZ_MAX_WRONG;
-    await updateDoc(pzRef(), done ? { wrong, done: true, ms } : { wrong });
-    showToast(done ? 'Maximaal aantal fouten, ronde voorbij' : 'Fout');
+    await updateDoc(pzRef(), { wrong: (pzMine.wrong || 0) + 1 });
+    showToast('Fout');
   }
 }
 async function pzStop(){
