@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Huize Noord">
 <!-- Ophogen bij elke update, dan herladen alle telefoons vanzelf -->
-<meta name="app-version" content="2026-10-28.9">
+<meta name="app-version" content="2026-10-28.10">
 <script>
 /* Auto-update: vergelijkt de versie hierboven met de nieuwste index.html op de server */
 (function(){
@@ -331,6 +331,16 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 .pz-winner { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 14px; }
 .pz-winner-score { margin-left: auto; }
 .pz-winner-label { color: var(--text-secondary); }
+
+.pz-board { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+.pz-board-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-secondary); margin-bottom: 4px; }
+.pz-board-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; font-size: 14px; }
+.pz-board-row.first .pz-board-name { font-weight: 700; }
+.pz-board-row.muted { color: var(--text-secondary); }
+.pz-board-row.muted .avatar { opacity: .5; }
+.pz-rank { width: 16px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pz-board-name { flex: 1; min-width: 0; }
+.pz-board-score { font-size: 13px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
 
 /* Home */
 .section-head { display: flex; align-items: center; justify-content: space-between; margin: 24px 0 10px; }
@@ -904,18 +914,30 @@ onSnapshot(collection(db, 'puzzel'), snap => {
 });
 
 function pzWinnerHtml(){
-  let label, r;
-  const prev = pzRank(pzWeek - 1)[0];
-  if (prev) { label = `Winnaar week ${pzWeekNo(pzWeek - 1)}`; r = prev; }
-  else { const cur = pzRank(pzWeek)[0]; if (cur) { label = `Koploper week ${pzWeekNo(pzWeek)}`; r = cur; } }
+  const r = pzRank(pzWeek - 1)[0];
   if (!r) return '';
   return `<div class="pz-winner"><img class="avatar avatar-sm" src="${avatarSrc(r.person, 'sm')}" alt="">
-    <span><span class="pz-winner-label">${label}:</span> <b>${escapeHtml(r.person)}</b></span>
+    <span><span class="pz-winner-label">Winnaar week ${pzWeekNo(pzWeek - 1)}:</span> <b>${escapeHtml(r.person)}</b></span>
     <span class="pz-winner-score">${r.found.length}/3 · ${fmtMs(r.ms)}</span></div>`;
+}
+function pzBoardHtml(){
+  if (!pzPuzzle) return '';
+  const res = pzResults[pzWeek] || {};
+  const done = pzRank(pzWeek);
+  const busy = PEOPLE.filter(p => res[p] && !res[p].done);
+  const none = PEOPLE.filter(p => !res[p]);
+  const row = (rank, p, score, cls) => `<div class="pz-board-row${cls ? ' ' + cls : ''}"><span class="pz-rank">${rank}</span>
+    <img class="avatar avatar-sm" src="${avatarSrc(p, 'sm')}" alt=""><span class="pz-board-name">${escapeHtml(p)}</span><span class="pz-board-score">${score}</span></div>`;
+  const rows = [
+    ...done.map((r, i) => row(i + 1, r.person, `${r.found.length}/3 · ${fmtMs(r.ms)}`, i === 0 ? 'first' : '')),
+    ...busy.map(p => row('', p, 'bezig', 'muted')),
+    ...none.map(p => row('', p, 'nog niet gespeeld', 'muted'))
+  ].join('');
+  return `<div class="pz-board"><div class="pz-board-title">Scorebord week ${pzWeekNo(pzWeek)}</div>${rows}</div>`;
 }
 
 function renderPuzzel(){
-  const winner = pzWinnerHtml();
+  const winner = pzBoardHtml() + pzWinnerHtml();
   if (!pzPuzzle && !winner) { pzCard.hidden = true; return; }
   pzCard.hidden = false;
   const prevInput = document.getElementById('pzInput');
