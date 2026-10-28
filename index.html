@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Huize Noord">
 <!-- Ophogen bij elke update, dan herladen alle telefoons vanzelf -->
-<meta name="app-version" content="2026-10-28.5">
+<meta name="app-version" content="2026-10-28.6">
 <script>
 /* Auto-update: vergelijkt de versie hierboven met de nieuwste index.html op de server */
 (function(){
@@ -1464,9 +1464,9 @@ spinBtn.addEventListener('click', () => {
 /* ---------- Wedstrijden ---------- */
 // Logo's (alleen onze clubs): images/logos/<slug>.png
 const TEAM_SLUG = {
-  'FC Groningen': 'fc-groningen', 'FC Utrecht': 'fc-utrecht', 'FC Twente': 'fc-twente'
+  'FC Groningen': 'fc-groningen', 'FC Utrecht': 'fc-utrecht', 'FC Twente': 'fc-twente', 'PSV': 'psv'
 };
-const FOLLOW = ['FC Groningen', 'FC Utrecht', 'FC Twente'];
+const FOLLOW = ['FC Groningen', 'FC Utrecht', 'FC Twente', 'PSV'];
 const ED = (at, home, away) => ({ comp: 'Eredivisie', at, home, away });
 const FIXTURES = [
   // FC Groningen
@@ -1502,7 +1502,19 @@ const FIXTURES = [
   ED('2026-12-20T14:30', 'Feyenoord', 'FC Twente'),
   ED('2027-01-08T20:00', 'FC Twente', 'Fortuna Sittard'),
   ED('2027-01-23T20:00', 'FC Twente', 'sc Heerenveen'),
-  ED('2027-01-31T14:30', 'FC Twente', 'SC Cambuur')
+  ED('2027-01-31T14:30', 'FC Twente', 'SC Cambuur'),
+  // PSV
+  ED('2026-10-31T18:45', 'PSV', 'Willem II'),
+  ED('2026-11-08T16:45', 'SC Cambuur', 'PSV'),
+  ED('2026-11-21T16:30', 'NEC', 'PSV'),
+  ED('2026-11-28T18:45', 'PSV', 'Go Ahead Eagles'),
+  ED('2026-12-05T20:00', 'AZ', 'PSV'),
+  ED('2026-12-13T12:15', 'PSV', 'Telstar'),
+  ED('2026-12-20T20:00', 'PSV', 'PEC Zwolle'),
+  ED('2027-01-10T14:30', 'Feyenoord', 'PSV'),
+  ED('2027-01-16T21:00', 'Fortuna Sittard', 'PSV'),
+  ED('2027-01-23T21:00', 'PSV', 'ADO Den Haag'),
+  ED('2027-01-30T20:00', 'Willem II', 'PSV')
 ];
 const F1_RACES = [
   { at: '2026-11-01T21:00', name: 'GP Mexico' },
