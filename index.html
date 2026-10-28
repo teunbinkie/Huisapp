@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Huize Noord">
 <!-- Ophogen bij elke update, dan herladen alle telefoons vanzelf -->
-<meta name="app-version" content="2026-10-28.7">
+<meta name="app-version" content="2026-10-28.8">
 <script>
 /* Auto-update: vergelijkt de versie hierboven met de nieuwste index.html op de server */
 (function(){
@@ -313,6 +313,25 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 }
 .fact-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--accent); margin-bottom: 4px; }
 
+/* Puzzelronde */
+.pz-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-top: 12px; }
+.pz-sub { font-size: 14px; color: var(--text-secondary); margin: 2px 0 10px; }
+.pz-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 8px 0 10px; }
+.pz-w { min-width: 0; overflow-wrap: anywhere; background: var(--card-alt); border: 1px solid var(--border); border-radius: 8px; padding: 12px 4px; text-align: center; font-size: 13px; font-weight: 600; transition: background .2s; }
+.pz-w.g0, .pz-chip.g0 { background: var(--success-light); border-color: var(--success); color: var(--success); }
+.pz-w.g1, .pz-chip.g1 { background: var(--warning-light); border-color: var(--warning); color: var(--warning); }
+.pz-w.g2, .pz-chip.g2 { background: var(--card-alt); border-color: var(--david); color: var(--david); }
+.pz-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.pz-chip { border: 1px solid; border-radius: 99px; padding: 2px 10px; font-size: 12px; font-weight: 700; }
+.pz-row { display: flex; gap: 8px; margin: 0; }
+.pz-row input { flex: 1; }
+.pz-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; font-size: 12px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.pz-done { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 15px; }
+.pz-done-score, .pz-winner-score { font-variant-numeric: tabular-nums; color: var(--text-secondary); font-size: 13px; }
+.pz-winner { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 14px; }
+.pz-winner-score { margin-left: auto; }
+.pz-winner-label { color: var(--text-secondary); }
+
 /* Home */
 .section-head { display: flex; align-items: center; justify-content: space-between; margin: 24px 0 10px; }
 .section-head .section-title { margin: 0; }
@@ -479,6 +498,8 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
       <div class="fact-label">💡 Feitje van de dag</div>
       <div id="factText"></div>
     </div>
+
+    <div class="pz-card" id="pzCard" hidden></div>
 
     <div class="section-head">
       <div class="section-title">Aankomende events</div>
@@ -830,6 +851,165 @@ async function applyMissedChorePenalty(){
   }
 }
 applyMissedChorePenalty();
+
+/* ---------- Puzzelronde ---------- */
+const PZ_RAW = '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';
+const PZ_DATA = (() => {
+  try {
+    const k = 'huizenoord', b = atob(PZ_RAW); let s = '';
+    for (let i = 0; i < b.length; i++) s += String.fromCharCode(b.charCodeAt(i) ^ k.charCodeAt(i % k.length));
+    return JSON.parse(s);
+  } catch (e) { return {}; }
+})();
+const PZ_MAX_WRONG = 5;
+const pzWeek = currentN;
+const pzPuzzle = PZ_DATA[pzWeek];
+const pzCard = document.getElementById('pzCard');
+let pzResults = {};
+let pzMine = null;
+
+function isoWeek(d){
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day);
+  const y = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+  return Math.ceil(((t - y) / 864e5 + 1) / 7);
+}
+const pzWeekNo = n => isoWeek(getWeekMondayDate(n));
+function pzNorm(s){ return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, ''); }
+function pzLev(a, b){
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+    d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+  return d[a.length][b.length];
+}
+function pzMatch(input, g){
+  const x = pzNorm(input); if (!x) return false;
+  return g.a.some(ans => {
+    const y = pzNorm(ans); if (x === y) return true;
+    const tol = y.length >= 10 ? 2 : (y.length >= 5 ? 1 : 0);
+    return tol > 0 && pzLev(x, y) <= tol;
+  });
+}
+function fmtMs(ms){ const s = Math.round(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
+function pzRank(week){
+  return Object.values(pzResults[week] || {}).filter(r => r.done)
+    .sort((a, b) => (b.found.length - a.found.length) || (a.ms - b.ms));
+}
+
+onSnapshot(collection(db, 'puzzel'), snap => {
+  pzResults = {};
+  snap.forEach(d => { const r = d.data(); (pzResults[r.week] ||= {})[r.person] = r; });
+  pzMine = me ? (pzResults[pzWeek]?.[me] || null) : null;
+  renderPuzzel();
+});
+
+function pzWinnerHtml(){
+  let label, r;
+  const prev = pzRank(pzWeek - 1)[0];
+  if (prev) { label = `Winnaar week ${pzWeekNo(pzWeek - 1)}`; r = prev; }
+  else { const cur = pzRank(pzWeek)[0]; if (cur) { label = `Koploper week ${pzWeekNo(pzWeek)}`; r = cur; } }
+  if (!r) return '';
+  return `<div class="pz-winner"><img class="avatar avatar-sm" src="${avatarSrc(r.person, 'sm')}" alt="">
+    <span><span class="pz-winner-label">${label}:</span> <b>${escapeHtml(r.person)}</b></span>
+    <span class="pz-winner-score">${r.found.length}/3 · ${fmtMs(r.ms)}</span></div>`;
+}
+
+function renderPuzzel(){
+  const winner = pzWinnerHtml();
+  if (!pzPuzzle && !winner) { pzCard.hidden = true; return; }
+  pzCard.hidden = false;
+  const prevInput = document.getElementById('pzInput');
+  const keepVal = prevInput ? prevInput.value : '';
+  const hadFocus = prevInput && document.activeElement === prevInput;
+  let body = '';
+  if (!pzPuzzle) body = '';
+  else if (!me) body = '<div class="pz-sub">Kies eerst wie je bent.</div>';
+  else if (!pzMine) body = `<div class="pz-sub">9 woorden, 3 verbanden. Typ het begrip dat steeds 3 woorden verbindt. Je hebt één poging en mag ${PZ_MAX_WRONG} keer fout zitten.</div>
+    <button id="pzStart">Start puzzel</button>`;
+  else if (pzMine.done) body = `<div class="pz-done"><span>✅ Puzzelronde gespeeld</span><span class="pz-done-score">${pzMine.found.length}/3 · ${fmtMs(pzMine.ms)}</span></div>`;
+  else {
+    const found = pzMine.found || [];
+    const tiles = pzPuzzle.w.map(([w, gi]) => {
+      const pos = found.indexOf(gi);
+      return `<div class="pz-w${pos >= 0 ? ' g' + pos : ''}">${escapeHtml(w)}</div>`;
+    }).join('');
+    const labels = found.map((gi, pos) => `<span class="pz-chip g${pos}">${escapeHtml(pzPuzzle.g[gi].n)}</span>`).join('');
+    body = `<div class="pz-grid">${tiles}</div>
+      ${labels ? `<div class="pz-chips">${labels}</div>` : ''}
+      <form class="pz-row" id="pzForm"><input type="text" id="pzInput" placeholder="Typ een verband..." autocomplete="off" autocapitalize="off"><button type="submit">Check</button></form>
+      <div class="pz-meta"><span>Fout: ${pzMine.wrong || 0}/${PZ_MAX_WRONG}</span><span id="pzTime">${fmtMs(Date.now() - pzMine.startedAt)}</span><button type="button" class="ghost small-btn" id="pzStop">Stoppen</button></div>`;
+  }
+  pzCard.innerHTML = `<div class="fact-label">🧩 Puzzelronde · week ${pzWeekNo(pzWeek)}</div>${body}${winner}`;
+  const start = document.getElementById('pzStart'); if (start) start.onclick = pzStart;
+  const form = document.getElementById('pzForm'); if (form) form.onsubmit = e => { e.preventDefault(); pzGuess(); };
+  const stop = document.getElementById('pzStop'); if (stop) stop.onclick = pzStop;
+  const inp = document.getElementById('pzInput');
+  if (inp) { inp.value = keepVal; if (hadFocus) inp.focus(); }
+}
+setInterval(() => {
+  const t = document.getElementById('pzTime');
+  if (t && pzMine && !pzMine.done) t.textContent = fmtMs(Date.now() - pzMine.startedAt);
+}, 1000);
+
+function pzRef(){ return doc(db, 'puzzel', `${pzWeek}_${me}`); }
+async function pzStart(){
+  if (!me || !pzPuzzle) return;
+  try {
+    await runTransaction(db, async tx => {
+      const s = await tx.get(pzRef());
+      if (s.exists()) return;
+      tx.set(pzRef(), { person: me, week: pzWeek, startedAt: Date.now(), found: [], wrong: 0, done: false });
+    });
+  } catch (e) { showToast('Starten lukte niet, probeer opnieuw'); }
+}
+async function pzGuess(){
+  const inp = document.getElementById('pzInput');
+  const v = inp.value; if (!v.trim() || !pzMine || pzMine.done) return;
+  inp.value = '';
+  const found = pzMine.found || [];
+  const idx = pzPuzzle.g.findIndex(g => pzMatch(v, g));
+  if (idx >= 0 && found.includes(idx)) { showToast('Die heb je al'); return; }
+  const ms = Date.now() - pzMine.startedAt;
+  if (idx >= 0) {
+    const next = [...found, idx];
+    const done = next.length === 3;
+    await updateDoc(pzRef(), done ? { found: next, done: true, ms } : { found: next });
+    if (done) { burstConfetti(pzCard); showToast(`Alle verbanden in ${fmtMs(ms)}!`); }
+    else showToast(`✓ ${pzPuzzle.g[idx].n}`);
+  } else {
+    const wrong = (pzMine.wrong || 0) + 1;
+    const done = wrong >= PZ_MAX_WRONG;
+    await updateDoc(pzRef(), done ? { wrong, done: true, ms } : { wrong });
+    showToast(done ? 'Maximaal aantal fouten, ronde voorbij' : 'Fout');
+  }
+}
+async function pzStop(){
+  const btn = document.getElementById('pzStop');
+  if (btn.dataset.sure !== '1') { btn.dataset.sure = '1'; btn.textContent = 'Zeker?'; return; }
+  await updateDoc(pzRef(), { done: true, ms: Date.now() - pzMine.startedAt });
+}
+
+async function pzApplyPenalty(week){
+  if (!PZ_DATA[week]) return;
+  const meta = doc(db, 'puzzel_meta', String(week));
+  try {
+    const m0 = await getDoc(meta); if (m0.data()?.done) return;
+    const snap = await getDocs(collection(db, 'puzzel'));
+    const res = {};
+    snap.forEach(d => { const r = d.data(); if (r.week === week) res[r.person] = r; });
+    const sc = p => { const r = res[p]; return r ? { c: (r.found || []).length, ms: r.done ? r.ms : Infinity } : { c: -1, ms: Infinity }; };
+    const ranked = [...PEOPLE].sort((a, b) => (sc(b).c - sc(a).c) || (sc(a).ms - sc(b).ms));
+    const winner = ranked[0], ws = sc(winner), ls = sc(ranked[ranked.length - 1]);
+    const losers = ws.c < 0 ? [] : ranked.filter(p => p !== winner && sc(p).c === ls.c && sc(p).ms === ls.ms);
+    await runTransaction(db, async tx => {
+      const m = await tx.get(meta); if (m.data()?.done) return;
+      losers.forEach(l => tx.set(doc(db, 'anys', `${winner}_${l}`), { count: increment(1) }, { merge: true }));
+      tx.set(meta, { done: true, winner: ws.c < 0 ? null : winner, losers });
+    });
+  } catch (e) {}
+}
+pzApplyPenalty(currentN - 1);
 
 /* ---------- Anys ---------- */
 const anysGrid = document.getElementById('anysGrid');
