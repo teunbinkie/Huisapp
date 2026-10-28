@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Huize Noord">
 <!-- Ophogen bij elke update, dan herladen alle telefoons vanzelf -->
-<meta name="app-version" content="2026-10-28.2">
+<meta name="app-version" content="2026-10-28.3">
 <script>
 /* Auto-update: vergelijkt de versie hierboven met de nieuwste index.html op de server */
 (function(){
@@ -239,6 +239,13 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 }
 .dish-name { flex: 1; font-size: 14px; min-width: 120px; }
 .dish-author { font-size: 11px; color: var(--text-secondary); }
+.hg-row {
+  display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 8px;
+}
+.hg-date { font-size: 12px; font-weight: 700; color: var(--accent); min-width: 52px; }
+.hg-name { flex: 1; font-size: 14px; font-weight: 500; word-break: break-word; }
+.hg-score { font-size: 12px; color: var(--text-secondary); white-space: nowrap; }
 .vote-group { display: flex; align-items: center; gap: 6px; }
 .vote-group button { padding: 5px 10px; font-size: 13px; }
 .vote-group button.up.active { background: var(--success); }
@@ -531,6 +538,9 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 
     <div class="section-title">Aanwezig vanaf &amp; bier/eten</div>
     <div id="aanwezigList"></div>
+
+    <div class="section-title">🏆 Huisgerechten</div>
+    <div class="list" id="huisgerechtenList"></div>
   </div>
 
   <!-- Account -->
@@ -552,7 +562,7 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import {
   getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, addDoc,
-  onSnapshot, getDoc, serverTimestamp, runTransaction, increment, deleteField
+  onSnapshot, getDoc, getDocs, serverTimestamp, runTransaction, increment, deleteField
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1044,6 +1054,58 @@ aanwezigList.querySelectorAll('.toggle-btn.eten').forEach(btn => {
     updateDoc(huisavondDocRef, { [`aanwezig.${person}.eten`]: !current });
   });
 });
+
+/* ---------- Huisgerechten-log ---------- */
+// Na afloop van een huisavond wordt alleen het gerecht met de meeste stemmen gelogd.
+// Gelijkspel: het gerecht dat het eerst is voorgesteld wint. Geen positieve stemmen = niets gelogd.
+const huisgerechtenCol = collection(db, 'huisgerechten');
+async function logPastHuisavonden(){
+  const todayKey = fmtDate(new Date());
+  for (let w = 1; w <= 4; w++) {
+    const d = new Date(huisavondDate);
+    d.setDate(d.getDate() - 7*w);
+    const key = fmtDate(d);
+    if (key >= todayKey) continue;
+    try {
+      const logRef = doc(db, 'huisgerechten', key);
+      if ((await getDoc(logRef)).exists()) continue;
+      const snap = await getDocs(collection(db, 'huisavond', key, 'gerechten'));
+      let best = null;
+      snap.forEach(dd => {
+        const g = dd.data();
+        const score = Object.values(g.votes || {}).reduce((a,b) => a+b, 0);
+        const t = g.createdAt?.toMillis?.() || 0;
+        if (!best || score > best.score || (score === best.score && t < best.t)) best = { text: g.text, author: g.author || null, score, t };
+      });
+      if (best && best.score > 0) {
+        await setDoc(logRef, { date: key, gerecht: best.text, voorgesteldDoor: best.author, stemmen: best.score, loggedAt: serverTimestamp() });
+      }
+    } catch (e) {}
+  }
+}
+logPastHuisavonden();
+
+const hgList = document.getElementById('huisgerechtenList');
+onSnapshot(huisgerechtenCol, snap => {
+  const rows = [];
+  snap.forEach(d => rows.push(d.data()));
+  rows.sort((a,b) => (b.date || '').localeCompare(a.date || ''));
+  hgList.innerHTML = '';
+  if (rows.length === 0) {
+    hgList.innerHTML = '<div class="empty-state">Nog geen huisgerechten. Na elke huisavond komt hier het winnende gerecht.</div>';
+    return;
+  }
+  rows.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'hg-row';
+    row.innerHTML = `
+      <div class="hg-date">${parseDay(r.date).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })}</div>
+      <div class="hg-name">${escapeHtml(r.gerecht || '')}${r.voorgesteldDoor ? ` <span class="dish-author">· ${escapeHtml(r.voorgesteldDoor)}</span>` : ''}</div>
+      <div class="hg-score">${r.stemmen} ${r.stemmen === 1 ? 'stem' : 'stemmen'}</div>
+    `;
+    hgList.appendChild(row);
+  });
+}, () => {});
 
 /* ---------- Account / Zwakte ---------- */
 function renderZwakte(){
