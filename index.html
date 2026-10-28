@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Huize Noord">
 <!-- Ophogen bij elke update, dan herladen alle telefoons vanzelf -->
-<meta name="app-version" content="2026-10-28.3">
+<meta name="app-version" content="2026-10-28.4">
 <script>
 /* Auto-update: vergelijkt de versie hierboven met de nieuwste index.html op de server */
 (function(){
@@ -263,9 +263,14 @@ input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-colo
 .aanwezig-name.teun { color: var(--teun); }
 .aanwezig-main { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; overflow: hidden; }
 .toggle-group { display: flex; gap: 6px; }
-.toggle-btn { padding: 7px 10px; font-size: 15px; background: var(--card-alt); color: var(--fg); border: 1px solid var(--border); line-height: 1; }
+.toggle-btn { padding: 7px 8px; font-size: 15px; background: var(--card-alt); color: var(--fg); border: 1px solid var(--border); line-height: 1; }
 .toggle-btn.active.bier { background: var(--success); color: white; border-color: var(--success); }
 .toggle-btn.active.eten { background: var(--warning); color: white; border-color: var(--warning); }
+.toggle-btn.active.weg { background: var(--danger); color: white; border-color: var(--danger); }
+.toggle-btn.weg:not(.active) { filter: grayscale(1); opacity: .55; }
+.aanwezig-row.afwezig .aanwezig-name { text-decoration: line-through; opacity: .6; }
+.aanwezig-row.afwezig .avatar { opacity: .5; }
+.aanwezig-row.afwezig .time-select { opacity: .4; }
 .time-select {
   flex: none; width: 74px; padding: 8px 4px; font-size: 15px; font-family: inherit; text-align: center; text-align-last: center;
   background: var(--card-alt); color: var(--fg); border: 1px solid var(--border); border-radius: 8px;
@@ -1012,6 +1017,7 @@ PEOPLE.forEach(person => {
     <div class="toggle-group">
       <button class="toggle-btn bier" data-person="${person}" title="Drinkt bier">🍺</button>
       <button class="toggle-btn eten" data-person="${person}" title="Eet mee">🍽️</button>
+      <button class="toggle-btn weg" data-person="${person}" title="Niet aanwezig">❌</button>
     </div>
     <select class="time-select empty" data-person="${person}" title="Aanwezig vanaf">${TIME_OPTIONS}</select>
   `;
@@ -1031,27 +1037,42 @@ onSnapshot(huisavondDocRef, snap => {
     const etenBtn = aanwezigList.querySelector(`.toggle-btn.eten[data-person="${person}"]`);
     bierBtn.classList.toggle('active', !!data.bier);
     etenBtn.classList.toggle('active', !!data.eten);
+    const wegBtn = aanwezigList.querySelector(`.toggle-btn.weg[data-person="${person}"]`);
+    wegBtn.classList.toggle('active', !!data.afwezig);
+    wegBtn.closest('.aanwezig-row').classList.toggle('afwezig', !!data.afwezig);
   });
 });
 aanwezigList.querySelectorAll('select.time-select').forEach(input => {
   input.addEventListener('change', () => {
     const person = input.dataset.person;
     input.classList.toggle('empty', !input.value);
-    updateDoc(huisavondDocRef, { [`aanwezig.${person}.tijd`]: input.value });
+    const upd = { [`aanwezig.${person}.tijd`]: input.value };
+    if (input.value) upd[`aanwezig.${person}.afwezig`] = false;
+    updateDoc(huisavondDocRef, upd);
   });
 });
 aanwezigList.querySelectorAll('.toggle-btn.bier').forEach(btn => {
   btn.addEventListener('click', () => {
     const person = btn.dataset.person;
     const current = !!aanwezigCache[person]?.bier;
-    updateDoc(huisavondDocRef, { [`aanwezig.${person}.bier`]: !current });
+    updateDoc(huisavondDocRef, { [`aanwezig.${person}.bier`]: !current, [`aanwezig.${person}.afwezig`]: false });
   });
 });
 aanwezigList.querySelectorAll('.toggle-btn.eten').forEach(btn => {
   btn.addEventListener('click', () => {
     const person = btn.dataset.person;
     const current = !!aanwezigCache[person]?.eten;
-    updateDoc(huisavondDocRef, { [`aanwezig.${person}.eten`]: !current });
+    updateDoc(huisavondDocRef, { [`aanwezig.${person}.eten`]: !current, [`aanwezig.${person}.afwezig`]: false });
+  });
+});
+// ❌ = niet aanwezig: zet bier, eten en tijd uit
+aanwezigList.querySelectorAll('.toggle-btn.weg').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const person = btn.dataset.person;
+    const current = !!aanwezigCache[person]?.afwezig;
+    const upd = { [`aanwezig.${person}.afwezig`]: !current };
+    if (!current) Object.assign(upd, { [`aanwezig.${person}.bier`]: false, [`aanwezig.${person}.eten`]: false, [`aanwezig.${person}.tijd`]: '' });
+    updateDoc(huisavondDocRef, upd);
   });
 });
 
